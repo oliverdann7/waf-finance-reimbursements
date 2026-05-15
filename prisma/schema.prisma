@@ -7,6 +7,102 @@ datasource db {
   provider = "sqlite"
 }
 
+model User {
+  id              String    @id @default(cuid())
+  name            String
+  email           String    @unique
+  passwordHash    String
+  role            Role      @default("WORKER")
+  city            String    @default("")
+  department      String    @default("")
+  title           String    @default("")
+  defaultCurrency String    @default("TRY")
+  monthlyLimit    Float     @default(5000)
+  receiptLimit    Float     @default(500)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  expenses        Expense[]
+  receipts        Receipt[]
+  reports         Report[]
+}
+
+model Report {
+  id                String       @id @default(cuid())
+  month             Int
+  year              Int
+  status            ReportStatus @default("DRAFT")
+  totalRequested    Float        @default(0)
+  totalReimbursable Float        @default(0)
+  adminComments     String       @default("")
+  submissionDate    DateTime?
+  approvalDate      DateTime?
+  paymentDate       DateTime?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  userId            String
+  expenses          Expense[]
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, month, year])
+}
+
+model Expense {
+  id                 String        @id @default(cuid())
+  date               DateTime
+  merchant           String
+  description        String        @default("")
+  category           String
+  amount             Float
+  currency           String        @default("TRY")
+  exchangeRate       Float         @default(1)
+  amountInTRY        Float
+  reimbursableAmount Float
+  notes              String        @default("")
+  status             ExpenseStatus @default("PENDING")
+  adminComment       String        @default("")
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  userId             String
+  reportId           String
+  report             Report        @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  user               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  receipts           Receipt[]
+}
+
+model Receipt {
+  id                  String    @id @default(cuid())
+  originalName        String
+  filePath            String
+  fileType            String
+  fileSize            Int
+  extractedText       String    @default("")
+  parsedDate          DateTime?
+  parsedMerchant      String    @default("")
+  parsedAmount        Float?
+  parsedCurrency      String    @default("")
+  parsedPaymentMethod String    @default("")
+  suggestedCategory   String    @default("")
+  confidenceScore     Float     @default(0)
+  uploadDate          DateTime  @default(now())
+  userId              String
+  expenseId           String?
+  expense             Expense?  @relation(fields: [expenseId], references: [id])
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ReimbursementRule {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  description String   @default("")
+  type        String
+  value       Float
+  unit        String   @default("")
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 enum Role {
   WORKER
   TREASURER
@@ -27,104 +123,4 @@ enum ExpenseStatus {
   PENDING
   APPROVED
   REJECTED
-}
-
-model User {
-  id              String   @id @default(cuid())
-  name            String
-  email           String   @unique
-  passwordHash    String
-  role            Role     @default(WORKER)
-  city            String   @default("")
-  department      String   @default("")
-  title           String   @default("")
-  defaultCurrency String   @default("TRY")
-  monthlyLimit    Float    @default(5000)
-  receiptLimit    Float    @default(500)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  reports         Report[]
-  expenses        Expense[]
-  receipts        Receipt[]
-}
-
-model Report {
-  id              String       @id @default(cuid())
-  month           Int
-  year            Int
-  status          ReportStatus @default(DRAFT)
-  totalRequested  Float        @default(0)
-  totalReimbursable Float      @default(0)
-  adminComments   String       @default("")
-  submissionDate  DateTime?
-  approvalDate    DateTime?
-  paymentDate     DateTime?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-
-  userId          String
-  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expenses        Expense[]
-
-  @@unique([userId, month, year])
-}
-
-model Expense {
-  id               String       @id @default(cuid())
-  date             DateTime
-  merchant         String
-  description      String       @default("")
-  category         String
-  amount           Float
-  currency         String       @default("TRY")
-  exchangeRate     Float        @default(1)
-  amountInTRY      Float
-  reimbursableAmount Float
-  notes            String       @default("")
-  status           ExpenseStatus @default(PENDING)
-  adminComment     String       @default("")
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
-
-  userId           String
-  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  reportId         String
-  report           Report       @relation(fields: [reportId], references: [id], onDelete: Cascade)
-  receipts         Receipt[]
-}
-
-model Receipt {
-  id              String   @id @default(cuid())
-  originalName    String
-  filePath        String
-  fileType        String
-  fileSize        Int
-  extractedText   String   @default("")
-  parsedDate      DateTime?
-  parsedMerchant  String   @default("")
-  parsedAmount    Float?
-  parsedCurrency  String   @default("")
-  parsedPaymentMethod String @default("")
-  suggestedCategory String @default("")
-  confidenceScore Float    @default(0)
-  uploadDate      DateTime @default(now())
-
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expenseId       String?
-  expense         Expense? @relation(fields: [expenseId], references: [id], onDelete: SetNull)
-}
-
-model ReimbursementRule {
-  id          String   @id @default(cuid())
-  key         String   @unique
-  name        String
-  description String   @default("")
-  type        String
-  value       Float
-  unit        String   @default("")
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }

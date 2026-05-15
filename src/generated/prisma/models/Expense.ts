@@ -324,8 +324,8 @@ export type ExpenseWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   userId?: Prisma.StringFilter<"Expense"> | string
   reportId?: Prisma.StringFilter<"Expense"> | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   report?: Prisma.XOR<Prisma.ReportScalarRelationFilter, Prisma.ReportWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   receipts?: Prisma.ReceiptListRelationFilter
 }
 
@@ -347,8 +347,8 @@ export type ExpenseOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   reportId?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   report?: Prisma.ReportOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
   receipts?: Prisma.ReceiptOrderByRelationAggregateInput
 }
 
@@ -373,8 +373,8 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   userId?: Prisma.StringFilter<"Expense"> | string
   reportId?: Prisma.StringFilter<"Expense"> | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   report?: Prisma.XOR<Prisma.ReportScalarRelationFilter, Prisma.ReportWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   receipts?: Prisma.ReceiptListRelationFilter
 }, "id">
 
@@ -442,8 +442,8 @@ export type ExpenseCreateInput = {
   adminComment?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutExpensesInput
   report: Prisma.ReportCreateNestedOneWithoutExpensesInput
+  user: Prisma.UserCreateNestedOneWithoutExpensesInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutExpenseInput
 }
 
@@ -484,8 +484,8 @@ export type ExpenseUpdateInput = {
   adminComment?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutExpensesNestedInput
   report?: Prisma.ReportUpdateOneRequiredWithoutExpensesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutExpensesNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutExpenseNestedInput
 }
 
@@ -930,8 +930,8 @@ export type ExpenseCreateWithoutReceiptsInput = {
   adminComment?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutExpensesInput
   report: Prisma.ReportCreateNestedOneWithoutExpensesInput
+  user: Prisma.UserCreateNestedOneWithoutExpensesInput
 }
 
 export type ExpenseUncheckedCreateWithoutReceiptsInput = {
@@ -986,8 +986,8 @@ export type ExpenseUpdateWithoutReceiptsInput = {
   adminComment?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutExpensesNestedInput
   report?: Prisma.ReportUpdateOneRequiredWithoutExpensesNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutExpensesNestedInput
 }
 
 export type ExpenseUncheckedUpdateWithoutReceiptsInput = {
@@ -1215,8 +1215,8 @@ export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   updatedAt?: boolean
   userId?: boolean
   reportId?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   report?: boolean | Prisma.ReportDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   receipts?: boolean | Prisma.Expense$receiptsArgs<ExtArgs>
   _count?: boolean | Prisma.ExpenseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
@@ -1239,8 +1239,8 @@ export type ExpenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   updatedAt?: boolean
   userId?: boolean
   reportId?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   report?: boolean | Prisma.ReportDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
 
 export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1261,8 +1261,8 @@ export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   updatedAt?: boolean
   userId?: boolean
   reportId?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   report?: boolean | Prisma.ReportDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["expense"]>
 
 export type ExpenseSelectScalar = {
@@ -1287,25 +1287,25 @@ export type ExpenseSelectScalar = {
 
 export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "date" | "merchant" | "description" | "category" | "amount" | "currency" | "exchangeRate" | "amountInTRY" | "reimbursableAmount" | "notes" | "status" | "adminComment" | "createdAt" | "updatedAt" | "userId" | "reportId", ExtArgs["result"]["expense"]>
 export type ExpenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   report?: boolean | Prisma.ReportDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   receipts?: boolean | Prisma.Expense$receiptsArgs<ExtArgs>
   _count?: boolean | Prisma.ExpenseCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ExpenseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   report?: boolean | Prisma.ReportDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ExpenseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   report?: boolean | Prisma.ReportDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Expense"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     report: Prisma.$ReportPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
     receipts: Prisma.$ReceiptPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1720,8 +1720,8 @@ readonly fields: ExpenseFieldRefs;
  */
 export interface Prisma__ExpenseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   report<T extends Prisma.ReportDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ReportDefaultArgs<ExtArgs>>): Prisma.Prisma__ReportClient<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   receipts<T extends Prisma.Expense$receiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Expense$receiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
