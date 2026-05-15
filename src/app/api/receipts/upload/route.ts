@@ -2,8 +2,7 @@ import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { processReceipt } from "@/lib/ocr";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -18,20 +17,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    const uploadDir = path.join(process.cwd(), process.env.UPLOAD_DIR || "uploads");
-    await mkdir(uploadDir, { recursive: true });
+    // Upload to Vercel Blob
+    const blob = await put(file.name, file, {
+      access: "public",
+    });
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const fileName = `${Date.now()}-${file.name}`;
-    const filePath = path.join(uploadDir, fileName);
-    await writeFile(filePath, buffer);
-
     const ocrResult = await processReceipt(buffer, file.type);
 
     const receipt = await prisma.receipt.create({
       data: {
         originalName: file.name,
-        filePath,
+        filePath: blob.url, // Store the blob URL
         fileType: file.type,
         fileSize: file.size,
         extractedText: ocrResult.rawText,
@@ -48,6 +45,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ receipt, ocrResult }, { status: 201 });
   } catch (error) {
+    console.error("Upload error:", error);
     return NextResponse.json({ error: "Failed to upload receipt" }, { status: 500 });
   }
 }
