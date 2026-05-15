@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 
-export async function PATCH(req: Request, ctx: RouteContext<"/api/admin/expenses/[id]">) {
+export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

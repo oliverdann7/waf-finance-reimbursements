@@ -1,9 +1,9 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -22,9 +22,11 @@ interface ReceiptItem {
   expenseId: string | null;
 }
 
-export default function ReceiptsPage() {
-  const { data: session, status } = useSession();
+function ReceiptsContent() {
+  const { status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const expenseId = searchParams.get("expenseId");
   const [receipts, setReceipts] = useState<ReceiptItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
@@ -43,7 +45,7 @@ export default function ReceiptsPage() {
   }, []);
 
   useEffect(() => {
-    if (status === "authenticated") loadReceipts();
+    if (status === "authenticated") void Promise.resolve().then(loadReceipts);
   }, [status, loadReceipts]);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -53,6 +55,7 @@ export default function ReceiptsPage() {
     setUploading(true);
     const form = new FormData();
     form.append("file", file);
+    if (expenseId) form.append("expenseId", expenseId);
 
     if (fileInputRef.current) fileInputRef.current.value = "";
 
@@ -86,7 +89,7 @@ export default function ReceiptsPage() {
           </Button>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Receipts</h1>
-            <p className="text-muted-foreground mt-1">Upload and manage your receipts</p>
+            <p className="text-muted-foreground mt-1">Upload PDFs, images, and bank receipt files for OCR review</p>
           </div>
         </div>
         <div>
@@ -96,7 +99,7 @@ export default function ReceiptsPage() {
             <input
               ref={fileInputRef}
               type="file"
-              accept=".pdf,.jpg,.jpeg,.png,.gif"
+              accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.csv,.txt"
               className="absolute inset-0 opacity-0 cursor-pointer"
               onChange={handleUpload}
               disabled={uploading}
@@ -116,7 +119,7 @@ export default function ReceiptsPage() {
               Upload Your First Receipt
               <input
                 type="file"
-                accept=".pdf,.jpg,.jpeg,.png,.gif"
+                accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.csv,.txt"
                 className="absolute inset-0 opacity-0 cursor-pointer"
                 onChange={handleUpload}
                 disabled={uploading}
@@ -127,7 +130,7 @@ export default function ReceiptsPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {receipts.map((receipt) => (
-            <Card key={receipt.id}>
+            <Link key={receipt.id} href={`/receipts/${receipt.id}`}><Card className="h-full transition hover:shadow-md">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1 min-w-0">
@@ -174,15 +177,23 @@ export default function ReceiptsPage() {
                     </span>
                   ) : (
                     <span className="flex items-center gap-1 text-xs text-yellow-600">
-                      <XCircle className="h-3 w-3" /> Not linked
+                      <XCircle className="h-3 w-3" /> Review needed
                     </span>
                   )}
                 </div>
               </CardContent>
-            </Card>
+            </Card></Link>
           ))}
         </div>
       )}
     </div>
+  );
+}
+
+export default function ReceiptsPage() {
+  return (
+    <Suspense fallback={<div className="animate-pulse text-muted-foreground">Loading receipts...</div>}>
+      <ReceiptsContent />
+    </Suspense>
   );
 }

@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import type { Prisma } from "@/generated/prisma/client";
 
-export async function GET(req: Request, ctx: RouteContext<"/api/reports/[id]">) {
+export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -42,7 +43,7 @@ export async function GET(req: Request, ctx: RouteContext<"/api/reports/[id]">) 
   });
 }
 
-export async function PATCH(req: Request, ctx: RouteContext<"/api/reports/[id]">) {
+export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -60,7 +61,7 @@ export async function PATCH(req: Request, ctx: RouteContext<"/api/reports/[id]">
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const updateData: any = { status };
+  const updateData: Prisma.ReportUpdateInput = { status };
   if (status === "SUBMITTED") updateData.submissionDate = new Date();
   if (status === "APPROVED") updateData.approvalDate = new Date();
   if (status === "PAID") updateData.paymentDate = new Date();

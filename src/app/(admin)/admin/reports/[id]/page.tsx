@@ -13,11 +13,34 @@ import { toast } from "sonner";
 import { ArrowLeft, CheckCircle2, XCircle, DollarSign } from "lucide-react";
 import Link from "next/link";
 
+type AdminExpense = {
+  id: string;
+  date: string;
+  merchant: string;
+  description: string;
+  category: string;
+  amountInTRY: number;
+  status: string;
+  receipts?: Array<{ id: string }>;
+};
+
+type AdminReport = {
+  id: string;
+  month: number;
+  year: number;
+  status: string;
+  totalRequested: number;
+  totalReimbursable: number;
+  adminComments?: string;
+  user?: { name: string; email: string };
+  expenses?: AdminExpense[];
+};
+
 export default function AdminReportDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [report, setReport] = useState<any>(null);
+  const [report, setReport] = useState<AdminReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
@@ -38,7 +61,7 @@ export default function AdminReportDetailPage({ params }: { params: Promise<{ id
       setComment(json.adminComments || "");
       setLoading(false);
     }
-    if (status === "authenticated" && isAdmin) load();
+    if (status === "authenticated" && isAdmin) void Promise.resolve().then(load);
   }, [id, status, isAdmin]);
 
   async function handleAction(newStatus: string) {
@@ -188,7 +211,7 @@ export default function AdminReportDetailPage({ params }: { params: Promise<{ id
             <p className="text-muted-foreground text-center py-8">No expenses in this report</p>
           ) : (
             <div className="space-y-3">
-              {report.expenses?.map((expense: any) => (
+              {report.expenses?.map((expense) => (
                 <div key={expense.id} className="border rounded-lg p-4">
                   <div className="flex items-start justify-between">
                     <div>

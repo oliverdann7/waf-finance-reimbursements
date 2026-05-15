@@ -1,9 +1,10 @@
 import "dotenv/config";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 import { hash } from "bcryptjs";
+import { DEFAULT_RULES } from "../src/lib/rules/defaults";
 
-const adapter = new PrismaLibSql({ url: "file:./dev.db" });
+const adapter = new PrismaLibSql({ url: process.env.DATABASE_URL || "file:./dev.db" });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
@@ -135,16 +136,8 @@ async function main() {
   const existingRules = await prisma.reimbursementRule.count();
   if (existingRules === 0) {
     await prisma.reimbursementRule.createMany({
-      data: [
-        { key: "mileage_rate", name: "Mileage Rate", description: "Official rate per kilometer", type: "rate", value: 5.42, unit: "TRY/km", active: true },
-        { key: "communication_cap", name: "Communication Monthly Cap", description: "Max monthly for phone/internet", type: "cap", value: 500, unit: "TRY", active: true },
-        { key: "hospitality_cap", name: "Hospitality Monthly Cap", description: "Max monthly for hospitality", type: "cap", value: 2000, unit: "TRY", active: true },
-        { key: "utilities_percentage", name: "Utilities %", description: "Utility bill reimbursement %", type: "percentage", value: 50, unit: "%", active: true },
-        { key: "receipt_min_amount", name: "Receipt Required Minimum", description: "Receipt required above this amount", type: "limit", value: 100, unit: "TRY", active: true },
-        { key: "expense_age_limit", name: "Expense Age Limit", description: "Max expense age in days", type: "days", value: 90, unit: "days", active: true },
-        { key: "max_expense_amount", name: "Max Single Expense", description: "Max reimbursable for a single expense", type: "cap", value: 10000, unit: "TRY", active: true },
-        { key: "rent_cap", name: "Rent Assistance Cap", description: "Max monthly rent assistance", type: "cap", value: 3000, unit: "TRY", active: true },
-      ],
+      data: DEFAULT_RULES,
+
     });
   }
 

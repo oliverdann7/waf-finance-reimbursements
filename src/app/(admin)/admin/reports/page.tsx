@@ -3,13 +3,12 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { REPORT_STATUSES, MONTHS } from "@/types";
-import { toast } from "sonner";
+import { EXPENSE_CATEGORIES, REPORT_STATUSES, MONTHS } from "@/types";
 import { Search, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -19,9 +18,23 @@ function AdminReportsList() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [reports, setReports] = useState<any[]>([]);
+  const [reports, setReports] = useState<Array<{
+    id: string;
+    month: number;
+    year: number;
+    status: string;
+    totalReimbursable: number;
+    submissionDate?: string;
+    expenseCount: number;
+    missingReceiptCount: number;
+    highRiskWarnings: number;
+    user: { name: string; email: string; city: string };
+  }>>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [city, setCity] = useState("");
+  const [month, setMonth] = useState("");
+  const [category, setCategory] = useState("");
   const [statusFilter, setStatusFilter] = useState(searchParams.get("status") || "all");
 
   const role = session?.user?.role;
@@ -37,13 +50,16 @@ function AdminReportsList() {
       const params = new URLSearchParams();
       if (statusFilter !== "all") params.set("status", statusFilter);
       if (search) params.set("search", search);
+      if (city) params.set("city", city);
+      if (month) params.set("month", month);
+      if (category && category !== "all") params.set("category", category);
       const res = await fetch(`/api/admin/reports?${params}`);
       const json = await res.json();
       setReports(json);
       setLoading(false);
     }
     if (status === "authenticated" && isAdmin) load();
-  }, [status, isAdmin, statusFilter, search]);
+  }, [status, isAdmin, statusFilter, search, city, month, category]);
 
   if (loading) return <div className="animate-pulse text-muted-foreground">Loading...</div>;
 
@@ -61,8 +77,8 @@ function AdminReportsList() {
         </div>
       </div>
 
-      <div className="flex gap-4">
-        <div className="relative flex-1">
+      <div className="grid gap-3 md:grid-cols-[1.4fr_0.8fr_0.8fr_0.8fr_0.9fr]">
+        <div className="relative">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search by worker name..."
@@ -71,8 +87,35 @@ function AdminReportsList() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
+        <Input
+          placeholder="City"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        />
+        <Select value={month || "all"} onValueChange={(v) => setMonth(!v || v === "all" ? "" : v)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Month" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Months</SelectItem>
+            {MONTHS.map((label, index) => (
+              <SelectItem key={label} value={String(index + 1)}>{label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={category || "all"} onValueChange={(v) => setCategory(!v || v === "all" ? "" : v)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Categories</SelectItem>
+            {EXPENSE_CATEGORIES.map((item) => (
+              <SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Select value={statusFilter} onValueChange={(v) => v && setStatusFilter(v)}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger>
             <SelectValue placeholder="Filter" />
           </SelectTrigger>
           <SelectContent>
@@ -102,7 +145,7 @@ function AdminReportsList() {
                       <div>
                         <p className="font-medium">{report.user.name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {MONTHS[report.month - 1]} {report.year}
+                          {MONTHS[report.month - 1]} {report.year} • {report.user.city || "No city"}
                         </p>
                       </div>
                       <div className="text-right flex items-center gap-3">
@@ -115,6 +158,10 @@ function AdminReportsList() {
                     <div className="mt-2 text-xs text-muted-foreground">
                       {report.expenseCount} expense(s)
                       {report.submissionDate && ` • Submitted ${new Date(report.submissionDate).toLocaleDateString()}`}
+                      {report.missingReceiptCount > 0 && ` • ${report.missingReceiptCount} missing receipt(s)`}
+                      {report.highRiskWarnings > 0 && (
+                        <Badge variant="outline" className="ml-2 border-amber-200 bg-amber-50 text-amber-700">High-risk warnings</Badge>
+                      )}
                     </div>
                   </CardContent>
                 </Card>

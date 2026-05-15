@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { DEFAULT_RULES } from "@/lib/rules/defaults";
+import type { Prisma } from "@/generated/prisma/client";
 
 export async function GET() {
   const session = await auth();
@@ -31,7 +32,7 @@ export async function PATCH(req: Request) {
   }
 
   const { id, value, active } = await req.json();
-  const data: any = {};
+  const data: Prisma.ReimbursementRuleUpdateInput = {};
   if (value !== undefined) data.value = value;
   if (active !== undefined) data.active = active;
 

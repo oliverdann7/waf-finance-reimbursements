@@ -22,10 +22,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const stored = localStorage.getItem("waf-lang") as Language | null;
-    if (stored && LANGUAGES.find((l) => l.code === stored)) {
-      setLangState(stored);
-      setDir(LANGUAGES.find((l) => l.code === stored)!.dir);
-      document.documentElement.dir = LANGUAGES.find((l) => l.code === stored)!.dir;
+    const langInfo = LANGUAGES.find((l) => l.code === stored);
+    if (stored && langInfo) {
+      queueMicrotask(() => {
+        setLangState(stored);
+        setDir(langInfo.dir);
+      });
+      document.documentElement.dir = langInfo.dir;
       document.documentElement.lang = stored;
     }
   }, []);

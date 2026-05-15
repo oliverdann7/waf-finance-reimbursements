@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import type { Prisma } from "@/generated/prisma/client";
 
-export async function GET(req: Request, ctx: RouteContext<"/api/admin/reports/[id]">) {
+export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -19,7 +20,7 @@ export async function GET(req: Request, ctx: RouteContext<"/api/admin/reports/[i
   const report = await prisma.report.findUnique({
     where: { id },
     include: {
-      expenses: { orderBy: { date: "desc" } },
+      expenses: { include: { receipts: true }, orderBy: { date: "desc" } },
       user: { select: { name: true, email: true } },
     },
   });
@@ -31,7 +32,7 @@ export async function GET(req: Request, ctx: RouteContext<"/api/admin/reports/[i
   return NextResponse.json(report);
 }
 
-export async function PATCH(req: Request, ctx: RouteContext<"/api/admin/reports/[id]">) {
+export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -46,7 +47,7 @@ export async function PATCH(req: Request, ctx: RouteContext<"/api/admin/reports/
   const { id } = await ctx.params;
   const { status, adminComments } = await req.json();
 
-  const updateData: any = { status };
+  const updateData: Prisma.ReportUpdateInput = { status };
   if (adminComments !== undefined) updateData.adminComments = adminComments;
   if (status === "APPROVED") updateData.approvalDate = new Date();
   if (status === "PAID") updateData.paymentDate = new Date();

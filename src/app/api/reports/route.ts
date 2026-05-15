@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import type { Prisma } from "@/generated/prisma/client";
 
 export async function GET(req: Request) {
   const session = await auth();
@@ -12,8 +13,8 @@ export async function GET(req: Request) {
   const status = searchParams.get("status");
   const search = searchParams.get("search");
 
-  const where: any = { userId: session.user.id };
-  if (status) where.status = status;
+  const where: Prisma.ReportWhereInput = { userId: session.user.id };
+  if (status) where.status = status as Prisma.EnumReportStatusFilter["equals"];
 
   const reports = await prisma.report.findMany({
     where,
