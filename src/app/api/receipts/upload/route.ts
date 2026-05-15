@@ -48,6 +48,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ receipt, ocrResult }, { status: 201 });
   } catch (error) {
+    console.error("Receipt upload error:", error);
     return NextResponse.json({ error: "Failed to upload receipt" }, { status: 500 });
   }
 }
