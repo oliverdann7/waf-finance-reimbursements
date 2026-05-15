@@ -12,7 +12,7 @@ model User {
   name            String
   email           String    @unique
   passwordHash    String
-  role            Role      @default("WORKER")
+  role            Role      @default(WORKER)
   city            String    @default("")
   department      String    @default("")
   title           String    @default("")
@@ -30,7 +30,7 @@ model Report {
   id                String       @id @default(cuid())
   month             Int
   year              Int
-  status            ReportStatus @default("DRAFT")
+  status            ReportStatus @default(DRAFT)
   totalRequested    Float        @default(0)
   totalReimbursable Float        @default(0)
   adminComments     String       @default("")
@@ -58,7 +58,7 @@ model Expense {
   amountInTRY        Float
   reimbursableAmount Float
   notes              String        @default("")
-  status             ExpenseStatus @default("PENDING")
+  status             ExpenseStatus @default(PENDING)
   adminComment       String        @default("")
   createdAt          DateTime      @default(now())
   updatedAt          DateTime      @updatedAt
