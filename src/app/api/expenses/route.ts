@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { evaluateExpenseRules, checkDuplicates } from "@/lib/rules";
+import { calculateReimbursableAmount, checkDuplicates, evaluateExpenseRules, getRules } from "@/lib/rules";
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -10,16 +10,28 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { date, merchant, description, category, amount, currency, exchangeRate, reportId } = await req.json();
+    const { date, merchant, description, category, amount, currency, exchangeRate, reportId, receiptId } = await req.json();
 
     if (!date || !merchant || !category || !amount || !reportId) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const amountInTRY = amount * (exchangeRate || 1);
-    const reimbursableAmount = amountInTRY;
+    const report = await prisma.report.findFirst({
+      where: { id: reportId, userId: session.user.id, status: "DRAFT" },
+    });
+    if (!report) {
+      return NextResponse.json({ error: "Draft report not found" }, { status: 404 });
+    }
 
-    const hasReceipt = false;
+    const receipt = receiptId
+      ? await prisma.receipt.findFirst({ where: { id: receiptId, userId: session.user.id } })
+      : null;
+
+    const amountInTRY = amount * (exchangeRate || 1);
+    const rules = await getRules();
+    const reimbursableAmount = calculateReimbursableAmount({ category, amount, amountInTRY, rules });
+
+    const hasReceipt = Boolean(receipt);
 
     const [ruleResults, duplicateWarnings] = await Promise.all([
       evaluateExpenseRules({
@@ -36,6 +48,8 @@ export async function POST(req: Request) {
         date: new Date(date),
         merchant,
         userId: session.user.id,
+        filename: receipt?.originalName,
+        extractedText: receipt?.extractedText,
       }),
     ]);
 
@@ -56,6 +70,13 @@ export async function POST(req: Request) {
         reportId,
       },
     });
+
+    if (receipt) {
+      await prisma.receipt.update({
+        where: { id: receipt.id },
+        data: { expenseId: expense.id },
+      });
+    }
 
     const allExpenses = await prisma.expense.findMany({ where: { reportId } });
     const totalRequested = allExpenses.reduce((s, e) => s + e.amountInTRY, 0);

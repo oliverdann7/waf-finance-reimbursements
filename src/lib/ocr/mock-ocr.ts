@@ -41,28 +41,49 @@ const MOCK_EXTRACTIONS = [
     paymentMethod: "Credit Card",
     suggestedCategory: "BOOKS",
   },
+  {
+    date: "2026-05-10",
+    merchant: "Garanti BBVA Bank Statement",
+    amount: 1840.25,
+    currency: "TRY",
+    paymentMethod: "Bank Transfer",
+    suggestedCategory: "TRAVEL_MISC",
+  },
+  {
+    date: "2026-05-09",
+    merchant: "Enerjisa Electricity",
+    amount: 980.40,
+    currency: "TRY",
+    paymentMethod: "Bank Receipt",
+    suggestedCategory: "ELECTRICITY",
+  },
 ];
 
 export class MockOCRProvider implements OCRProvider {
   name = "Mock OCR";
 
-  async processReceipt(_buffer: Buffer, _mimeType: string): Promise<OCRResult> {
+  async processReceipt(buffer: Buffer, mimeType: string): Promise<OCRResult> {
     await new Promise((r) => setTimeout(r, 1500));
 
+    const text = buffer.toString("utf8").slice(0, 4000);
     const mock = MOCK_EXTRACTIONS[Math.floor(Math.random() * MOCK_EXTRACTIONS.length)];
+    const amountMatch = text.match(/(?:amount|total|tutar)\D{0,12}(\d+[.,]\d{2})/i);
+    const dateMatch = text.match(/(20\d{2}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}[-/.]\d{1,2}[-/.]20\d{2})/);
+    const merchantMatch = text.match(/(?:merchant|vendor|işyeri|firma)[:\s-]+([^\n]{3,80})/i);
+    const parsedAmount = amountMatch ? Number(amountMatch[1].replace(",", ".")) : mock.amount;
 
     return {
       success: true,
       data: {
-        date: mock.date,
-        merchant: mock.merchant,
-        amount: mock.amount,
+        date: dateMatch?.[1]?.replace(/[/.]/g, "-") || mock.date,
+        merchant: merchantMatch?.[1]?.trim() || mock.merchant,
+        amount: parsedAmount,
         currency: mock.currency,
         paymentMethod: mock.paymentMethod,
         suggestedCategory: mock.suggestedCategory,
       },
       confidence: 0.85 + Math.random() * 0.1,
-      rawText: `Receipt from ${mock.merchant}\nDate: ${mock.date}\nAmount: ${mock.amount} ${mock.currency}\nPayment: ${mock.paymentMethod}\n---\nMOCK OCR EXTRACTION - NOT FROM REAL RECEIPT`,
+      rawText: text.trim() || `Receipt from ${mock.merchant}\nDate: ${mock.date}\nAmount: ${mock.amount} ${mock.currency}\nPayment: ${mock.paymentMethod}\nMIME: ${mimeType}\n---\nMOCK OCR EXTRACTION - NOT FROM REAL RECEIPT`,
     };
   }
 }

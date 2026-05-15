@@ -73,4 +73,22 @@ export const DEFAULT_RULES: Omit<ReimbursementRule, "id">[] = [
     unit: "TRY",
     active: true,
   },
+  {
+    key: "category_limit_equipment",
+    name: "Equipment Category Limit",
+    description: "Maximum reimbursable equipment purchase without finance exception",
+    type: "category_limit",
+    value: 7500,
+    unit: "TRY",
+    active: true,
+  },
+  {
+    key: "category_limit_books",
+    name: "Books Category Limit",
+    description: "Maximum reimbursable books and learning materials",
+    type: "category_limit",
+    value: 1500,
+    unit: "TRY",
+    active: true,
+  },
 ];

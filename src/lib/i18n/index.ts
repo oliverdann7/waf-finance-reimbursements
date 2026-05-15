@@ -11,8 +11,12 @@ export function getTranslation(lang: Language): TranslationMap {
   return translations[lang] || en;
 }
 
-export function getNestedValue(obj: any, path: string): string {
-  return path.split(".").reduce((acc, key) => acc?.[key], obj) as string || path;
+export function getNestedValue(obj: unknown, path: string): string {
+  const value = path.split(".").reduce<unknown>((acc, key) => {
+    if (typeof acc !== "object" || acc === null || !(key in acc)) return undefined;
+    return (acc as Record<string, unknown>)[key];
+  }, obj);
+  return typeof value === "string" ? value : path;
 }
 
 export function interpolate(template: string, params: Record<string, string | number>): string {

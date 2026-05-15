@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/db";
-import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { NextResponse } from "next/server";
+
+function csvEscape(value: unknown) {
+  return `"${String(value ?? "").replace(/"/g, '""')}"`;
+}
 
 export async function GET(req: Request) {
   const session = await auth();
@@ -19,7 +23,7 @@ export async function GET(req: Request) {
   const report = await prisma.report.findUnique({
     where: { id: reportId },
     include: {
-      expenses: true,
+      expenses: { include: { receipts: true }, orderBy: { date: "asc" } },
       user: true,
     },
   });
@@ -29,19 +33,27 @@ export async function GET(req: Request) {
   }
 
   const isOwner = report.userId === session.user.id;
-  const isAdmin =
-    session.user.role === "ADMIN" ||
-    session.user.role === "SUPER_ADMIN" ||
-    session.user.role === "TREASURER";
+  const isAdmin = ["ADMIN", "SUPER_ADMIN", "TREASURER"].includes(session.user.role || "");
 
   if (!isOwner && !isAdmin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const rows = [
-    ["Field", "Value"],
+  const categoryTotals = new Map<string, { requested: number; reimbursable: number; count: number }>();
+  for (const expense of report.expenses) {
+    const current = categoryTotals.get(expense.category) || { requested: 0, reimbursable: 0, count: 0 };
+    current.requested += expense.amountInTRY;
+    current.reimbursable += expense.reimbursableAmount;
+    current.count += 1;
+    categoryTotals.set(expense.category, current);
+  }
+
+  const rows: unknown[][] = [
+    ["WAF Finance Reimbursement Export"],
     ["Worker Name", report.user.name],
     ["Worker Email", report.user.email],
+    ["Worker City", report.user.city],
+    ["Worker Department", report.user.department],
     ["Month", report.month],
     ["Year", report.year],
     ["Status", report.status],
@@ -51,7 +63,29 @@ export async function GET(req: Request) {
     ["Approval Date", report.approvalDate?.toISOString() || ""],
     ["Payment Date", report.paymentDate?.toISOString() || ""],
     [],
-    ["Date", "Merchant", "Category", "Amount", "Currency", "Amount (TRY)", "Reimbursable", "Status"],
+    ["Category Summary"],
+    ["Category", "Expense Count", "Requested (TRY)", "Reimbursable (TRY)"],
+    ...[...categoryTotals.entries()].map(([category, totals]) => [
+      category,
+      totals.count,
+      totals.requested.toFixed(2),
+      totals.reimbursable.toFixed(2),
+    ]),
+    [],
+    ["Expense Line Items"],
+    [
+      "Date",
+      "Merchant",
+      "Category",
+      "Description",
+      "Amount",
+      "Currency",
+      "Amount (TRY)",
+      "Reimbursable (TRY)",
+      "Approval Status",
+      "Receipt Count",
+      "Receipt Checklist",
+    ],
   ];
 
   for (const expense of report.expenses) {
@@ -59,20 +93,24 @@ export async function GET(req: Request) {
       new Date(expense.date).toISOString().split("T")[0],
       expense.merchant,
       expense.category,
-      expense.amount.toString(),
+      expense.description,
+      expense.amount.toFixed(2),
       expense.currency,
       expense.amountInTRY.toFixed(2),
       expense.reimbursableAmount.toFixed(2),
       expense.status,
+      expense.receipts.length,
+      expense.receipts.length > 0 ? expense.receipts.map((receipt) => receipt.originalName).join("; ") : "MISSING RECEIPT",
     ]);
   }
 
-  const csv = rows.map((row) => row.map((cell) => `"${cell}"`).join(",")).join("\n");
+  const csv = rows.map((row) => row.map(csvEscape).join(",")).join("\n");
+  const extension = format === "excel" ? "csv" : "csv";
 
-  return new NextResponse(csv, {
+  return new NextResponse(`\uFEFF${csv}`, {
     headers: {
-      "Content-Type": "text/csv",
-      "Content-Disposition": `attachment; filename="report-${reportId}.csv"`,
+      "Content-Type": "text/csv; charset=utf-8",
+      "Content-Disposition": `attachment; filename="waf-report-${report.year}-${report.month}-${reportId}.${extension}"`,
     },
   });
 }

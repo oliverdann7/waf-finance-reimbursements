@@ -7,3 +7,7 @@ uploads/
 .env.local
 .env.production
 .vercel
+
+# Local build artifacts
+tsconfig.tsbuildinfo
+.uploads/

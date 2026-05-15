@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
-import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { NextResponse } from "next/server";
+import type { Prisma } from "@/generated/prisma/client";
 
 export async function GET(req: Request) {
   const session = await auth();
@@ -17,34 +18,54 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const status = searchParams.get("status");
   const search = searchParams.get("search");
+  const month = searchParams.get("month");
+  const year = searchParams.get("year");
+  const city = searchParams.get("city");
+  const category = searchParams.get("category");
 
-  const where: any = {};
-  if (status) where.status = status;
-
-  if (search) {
-    where.user = { name: { contains: search } };
+  const where: Prisma.ReportWhereInput = {};
+  if (status && status !== "all") where.status = status as Prisma.EnumReportStatusFilter["equals"];
+  if (month) where.month = Number(month);
+  if (year) where.year = Number(year);
+  if (search || city) {
+    where.user = {
+      ...(search ? { name: { contains: search } } : {}),
+      ...(city ? { city: { contains: city } } : {}),
+    };
+  }
+  if (category) {
+    where.expenses = { some: { category } };
   }
 
   const reports = await prisma.report.findMany({
     where,
     include: {
-      user: { select: { name: true, email: true } },
+      user: { select: { name: true, email: true, city: true } },
+      expenses: { select: { status: true, receipts: { select: { id: true } }, amountInTRY: true } },
       _count: { select: { expenses: true } },
     },
     orderBy: [{ year: "desc" }, { month: "desc" }],
   });
 
   return NextResponse.json(
-    reports.map((r) => ({
-      id: r.id,
-      month: r.month,
-      year: r.year,
-      status: r.status,
-      totalRequested: r.totalRequested,
-      totalReimbursable: r.totalReimbursable,
-      submissionDate: r.submissionDate,
-      expenseCount: r._count.expenses,
-      user: r.user,
-    }))
+    reports.map((report) => {
+      const missingReceiptCount = report.expenses.filter((expense) => expense.receipts.length === 0).length;
+      const rejectedCount = report.expenses.filter((expense) => expense.status === "REJECTED").length;
+      const highRiskWarnings = missingReceiptCount + rejectedCount;
+
+      return {
+        id: report.id,
+        month: report.month,
+        year: report.year,
+        status: report.status,
+        totalRequested: report.totalRequested,
+        totalReimbursable: report.totalReimbursable,
+        submissionDate: report.submissionDate,
+        expenseCount: report._count.expenses,
+        missingReceiptCount,
+        highRiskWarnings,
+        user: report.user,
+      };
+    })
   );
 }

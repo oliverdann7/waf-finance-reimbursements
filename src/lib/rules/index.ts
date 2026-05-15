@@ -171,30 +171,99 @@ export async function evaluateExpenseRules(params: {
   return { evaluations, warnings };
 }
 
+function normalizeForSimilarity(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9ğüşöçıİ\s.-]/gi, " ").replace(/\s+/g, " ").trim();
+}
+
+function similarityScore(a: string, b: string) {
+  const left = new Set(normalizeForSimilarity(a).split(" ").filter(Boolean));
+  const right = new Set(normalizeForSimilarity(b).split(" ").filter(Boolean));
+  if (left.size === 0 || right.size === 0) return 0;
+
+  const overlap = [...left].filter((token) => right.has(token)).length;
+  return overlap / Math.max(left.size, right.size);
+}
+
+export function calculateReimbursableAmount(params: {
+  category: string;
+  amount: number;
+  amountInTRY: number;
+  rules: ReimbursementRule[];
+}) {
+  const ruleMap = new Map(params.rules.filter((rule) => rule.active).map((rule) => [rule.key, rule]));
+
+  if (params.category === "MILEAGE") {
+    return params.amount * (ruleMap.get("mileage_rate")?.value ?? 0);
+  }
+
+  if (["ELECTRICITY", "GAS", "WATER"].includes(params.category)) {
+    const percentage = ruleMap.get("utilities_percentage")?.value ?? 100;
+    return params.amountInTRY * (percentage / 100);
+  }
+
+  const categoryLimit = ruleMap.get(`category_limit_${params.category.toLowerCase()}`);
+  const maxExpense = ruleMap.get("max_expense_amount");
+  const hardCap = Math.min(
+    categoryLimit?.value ?? Number.POSITIVE_INFINITY,
+    maxExpense?.value ?? Number.POSITIVE_INFINITY
+  );
+
+  return Math.min(params.amountInTRY, hardCap);
+}
+
 export async function checkDuplicates(params: {
   amount: number;
   date: Date;
   merchant: string;
   userId: string;
+  filename?: string;
+  extractedText?: string;
 }): Promise<ValidationWarning[]> {
   const warnings: ValidationWarning[] = [];
-  const existing = await prisma.expense.findMany({
-    where: { userId: params.userId },
-  });
+  const [existingExpenses, existingReceipts] = await Promise.all([
+    prisma.expense.findMany({
+      where: { userId: params.userId },
+      include: { receipts: true },
+      orderBy: { date: "desc" },
+      take: 100,
+    }),
+    prisma.receipt.findMany({
+      where: { userId: params.userId },
+      orderBy: { uploadDate: "desc" },
+      take: 100,
+    }),
+  ]);
 
-  for (const expense of existing) {
+  for (const expense of existingExpenses) {
     const sameAmount = Math.abs(expense.amount - params.amount) < 0.01;
-    const sameDate =
-      new Date(expense.date).toDateString() === new Date(params.date).toDateString();
-    const sameMerchant =
-      expense.merchant.toLowerCase().trim() === params.merchant.toLowerCase().trim();
+    const sameDate = new Date(expense.date).toDateString() === new Date(params.date).toDateString();
+    const sameMerchant = normalizeForSimilarity(expense.merchant) === normalizeForSimilarity(params.merchant);
 
-    if ((sameAmount && sameDate) || (sameAmount && sameMerchant)) {
+    if ((sameAmount && sameDate && sameMerchant) || (sameAmount && sameDate) || (sameAmount && sameMerchant)) {
       warnings.push({
         type: "duplicate",
-        message: `Possible duplicate: ${expense.merchant}, ${expense.amount} ${expense.currency} on ${new Date(expense.date).toLocaleDateString()}`,
+        message: `Possible duplicate expense: ${expense.merchant}, ${expense.amount} ${expense.currency} on ${new Date(expense.date).toLocaleDateString()}`,
         severity: "warning",
       });
+      break;
+    }
+  }
+
+  if (params.filename || params.extractedText) {
+    for (const receipt of existingReceipts) {
+      const sameFilename =
+        Boolean(params.filename) && normalizeForSimilarity(receipt.originalName) === normalizeForSimilarity(params.filename || "");
+      const similarText =
+        Boolean(params.extractedText && receipt.extractedText) && similarityScore(receipt.extractedText, params.extractedText || "") >= 0.65;
+
+      if (sameFilename || similarText) {
+        warnings.push({
+          type: "duplicate",
+          message: `Possible duplicate receipt: ${receipt.originalName}${sameFilename ? " (same filename)" : " (similar extracted text)"}`,
+          severity: "warning",
+        });
+        break;
+      }
     }
   }
 

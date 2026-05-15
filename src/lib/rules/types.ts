@@ -3,7 +3,7 @@ export interface ReimbursementRule {
   key: string;
   name: string;
   description: string;
-  type: "rate" | "cap" | "percentage" | "limit" | "days";
+  type: "rate" | "cap" | "percentage" | "limit" | "days" | "category_limit";
   value: number;
   unit: string;
   active: boolean;
