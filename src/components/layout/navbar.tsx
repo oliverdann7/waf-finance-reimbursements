@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 
@@ -28,6 +29,7 @@ export function Navbar() {
         </Link>
         <div className="flex-1" />
         <div className="flex items-center gap-2">
+          <LanguageSwitcher />
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button variant="ghost" className="relative h-9 w-9 rounded-full">
