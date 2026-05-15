@@ -50,4 +50,4 @@ export function useLanguage() {
   return useContext(LanguageContext);
 }
 
-export { t } from "./index";
+export { t, LANGUAGES } from "./index";
