@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,20 +28,23 @@ export default function ReceiptsPage() {
   const [receipts, setReceipts] = useState<ReceiptItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
   }, [status, router]);
 
+  const loadReceipts = useCallback(async () => {
+    const res = await fetch("/api/receipts");
+    if (!res.ok) return;
+    const json = await res.json();
+    if (Array.isArray(json)) setReceipts(json);
+    setLoading(false);
+  }, []);
+
   useEffect(() => {
-    async function load() {
-      const res = await fetch("/api/receipts");
-      const json = await res.json();
-      setReceipts(json);
-      setLoading(false);
-    }
-    if (status === "authenticated") load();
-  }, [status]);
+    if (status === "authenticated") loadReceipts();
+  }, [status, loadReceipts]);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -51,6 +54,8 @@ export default function ReceiptsPage() {
     const form = new FormData();
     form.append("file", file);
 
+    if (fileInputRef.current) fileInputRef.current.value = "";
+
     try {
       const res = await fetch("/api/receipts/upload", {
         method: "POST",
@@ -59,6 +64,7 @@ export default function ReceiptsPage() {
 
       if (!res.ok) throw new Error();
       toast.success("Receipt uploaded and scanned!");
+      await loadReceipts();
       router.refresh();
     } catch {
       toast.error("Failed to upload receipt");
@@ -88,6 +94,7 @@ export default function ReceiptsPage() {
             <Upload className="mr-2 h-4 w-4" />
             {uploading ? "Scanning..." : "Upload Receipt"}
             <input
+              ref={fileInputRef}
               type="file"
               accept=".pdf,.jpg,.jpeg,.png,.gif"
               className="absolute inset-0 opacity-0 cursor-pointer"
