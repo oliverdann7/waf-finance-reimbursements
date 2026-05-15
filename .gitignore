@@ -1,0 +1,8 @@
+node_modules/
+.next/
+*.db
+*.db-journal
+uploads/
+.env
+.env.local
+.env.production
