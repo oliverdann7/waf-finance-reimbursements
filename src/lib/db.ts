@@ -6,7 +6,13 @@ const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 function createPrismaClient() {
   if (process.env.NODE_ENV === "production") {
     // Production: Use standard Prisma Client for Vercel Postgres
-    return new PrismaClient({} as any);
+    return new PrismaClient({
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL,
+        },
+      },
+    }) as any;
   }
 
   // Development: Use LibSQL adapter for local SQLite
