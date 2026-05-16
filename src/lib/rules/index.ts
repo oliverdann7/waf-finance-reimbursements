@@ -171,11 +171,11 @@ export async function evaluateExpenseRules(params: {
   return { evaluations, warnings };
 }
 
-function normalizeForSimilarity(value: string) {
+export function normalizeForSimilarity(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9ğüşöçıİ\s.-]/gi, " ").replace(/\s+/g, " ").trim();
 }
 
-function similarityScore(a: string, b: string) {
+export function similarityScore(a: string, b: string) {
   const left = new Set(normalizeForSimilarity(a).split(" ").filter(Boolean));
   const right = new Set(normalizeForSimilarity(b).split(" ").filter(Boolean));
   if (left.size === 0 || right.size === 0) return 0;

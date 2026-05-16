@@ -41,11 +41,6 @@ function AdminReportsList() {
   const isAdmin = role === "ADMIN" || role === "SUPER_ADMIN" || role === "TREASURER";
 
   useEffect(() => {
-    if (status === "authenticated" && !isAdmin) router.push("/dashboard");
-    if (status === "unauthenticated") router.push("/login");
-  }, [status, isAdmin, router]);
-
-  useEffect(() => {
     async function load() {
       const params = new URLSearchParams();
       if (statusFilter !== "all") params.set("status", statusFilter);
