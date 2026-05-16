@@ -12,4 +12,8 @@ export default defineConfig({
   datasource: {
     url: process.env["DATABASE_URL"] || "file:./dev.db",
   },
+  // Add this to ensure it picks up the URL correctly
+  client: {
+    previewFeatures: ["driverAdapters"],
+  },
 });
