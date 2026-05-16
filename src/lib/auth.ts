@@ -4,7 +4,7 @@ import { compare } from "bcryptjs";
 
 // Only import prisma when NOT on Edge Runtime
 let prisma: any;
-if (typeof EdgeRuntime === 'undefined') {
+if (process.env.NEXT_RUNTIME !== 'edge') {
   prisma = require("./db").prisma;
 }
 
