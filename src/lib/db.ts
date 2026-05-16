@@ -3,18 +3,19 @@ import { PrismaLibSql } from "@prisma/adapter-libsql";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
-function createPrismaClient() {
-  if (process.env.NODE_ENV === "production") {
-    // Production: Use standard Prisma Client for Vercel Postgres
-    return new (PrismaClient as any)();
+// We want to use LibSql adapter ONLY locally if SQLite is used.
+// If DATABASE_URL is postgres, we do NOT use LibSql adapter.
+const isSqlite = (process.env.DATABASE_URL || "file:./dev.db").startsWith("file:");
+
+const prismaClientSingleton = () => {
+  if (isSqlite) {
+    const adapter = new PrismaLibSql({ url: process.env.DATABASE_URL || "file:./dev.db" });
+    return new PrismaClient({ adapter });
   }
+  return new PrismaClient();
+};
 
-  // Development: Use LibSQL adapter for local SQLite
-  const url = process.env.DATABASE_URL || "file:./dev.db";
-  const adapter = new PrismaLibSql({ url });
-  return new PrismaClient({ adapter } as any);
-}
-
-export const prisma = globalForPrisma.prisma ?? createPrismaClient();
+export const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
