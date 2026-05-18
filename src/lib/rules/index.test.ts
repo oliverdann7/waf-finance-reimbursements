@@ -9,6 +9,7 @@ describe('Reimbursement Rules Utility Functions', () => {
         category: 'MILEAGE',
         amount: 100,
         amountInTRY: 500,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         rules: rules as any,
       });
       expect(amount).toBe(500);
@@ -20,6 +21,7 @@ describe('Reimbursement Rules Utility Functions', () => {
         category: 'ELECTRICITY',
         amount: 100,
         amountInTRY: 200,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         rules: rules as any,
       });
       expect(amount).toBe(100);
@@ -31,6 +33,7 @@ describe('Reimbursement Rules Utility Functions', () => {
         category: 'BOOKS',
         amount: 100,
         amountInTRY: 100,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         rules: rules as any,
       });
       expect(amount).toBe(50);

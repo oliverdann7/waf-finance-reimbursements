@@ -1,11 +1,14 @@
 import "dotenv/config";
 import { PrismaClient } from "../src/generated/prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 import { hash } from "bcryptjs";
 import { DEFAULT_RULES } from "../src/lib/rules/defaults";
 
-const adapter = new PrismaLibSql({ url: process.env.DATABASE_URL || "file:./dev.db" });
-const prisma = new PrismaClient({ adapter });
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const prisma = new PrismaClient({ adapter } as any);
 
 async function main() {
   console.log("Seeding database...");
