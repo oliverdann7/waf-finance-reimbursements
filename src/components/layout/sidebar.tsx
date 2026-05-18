@@ -11,6 +11,10 @@ import {
   Receipt,
   Settings,
   Shield,
+  Church,
+  Building2,
+  BarChart3,
+  Sliders,
 } from "lucide-react";
 
 const workerLinks = [
@@ -22,10 +26,19 @@ const workerLinks = [
   { href: "/settings/profile", label: "Settings", icon: Settings },
 ];
 
+const churchLinks = [
+  { href: "/church/dashboard", label: "Church Dashboard", icon: Church },
+  { href: "/church/reports", label: "My Church Reports", icon: FileText },
+  { href: "/church/reports/new", label: "New Report", icon: PlusCircle },
+];
+
 const adminLinks = [
   { href: "/admin", label: "Admin Dashboard", icon: Shield },
   { href: "/admin/reports", label: "All Reports", icon: FileText },
   { href: "/admin/rules", label: "Reimbursement Rules", icon: Settings },
+  { href: "/admin/churches", label: "Churches", icon: Building2 },
+  { href: "/admin/church-reports", label: "Church Reports", icon: BarChart3 },
+  { href: "/admin/church-config", label: "Distribution Config", icon: Sliders },
 ];
 
 export function Sidebar() {
@@ -33,8 +46,11 @@ export function Sidebar() {
   const { data: session } = useSession();
   const role = session?.user?.role;
   const isAdmin = role === "ADMIN" || role === "SUPER_ADMIN" || role === "TREASURER";
+  const isChurchRole = role === "CHURCH_TREASURER" || role === "CHURCH_PASTOR" || role === "CHURCH_USER";
 
-  const links = isAdmin ? [...workerLinks, ...adminLinks] : workerLinks;
+  let links = workerLinks;
+  if (isChurchRole) links = churchLinks;
+  if (isAdmin) links = [...workerLinks, ...adminLinks];
 
   return (
     <aside className="hidden lg:flex w-64 flex-col border-r bg-white min-h-screen">

@@ -9,6 +9,11 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/Church'
+export type * from './models/ChurchMonthlyFinancialReport'
+export type * from './models/TitheOfferingDetail'
+export type * from './models/ChurchReportAttachment'
+export type * from './models/ChurchDistributionConfig'
 export type * from './models/Report'
 export type * from './models/Expense'
 export type * from './models/Receipt'

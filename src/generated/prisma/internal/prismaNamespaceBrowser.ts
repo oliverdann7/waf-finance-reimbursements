@@ -52,6 +52,11 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  Church: 'Church',
+  ChurchMonthlyFinancialReport: 'ChurchMonthlyFinancialReport',
+  TitheOfferingDetail: 'TitheOfferingDetail',
+  ChurchReportAttachment: 'ChurchReportAttachment',
+  ChurchDistributionConfig: 'ChurchDistributionConfig',
   Report: 'Report',
   Expense: 'Expense',
   Receipt: 'Receipt',
@@ -87,10 +92,104 @@ export const UserScalarFieldEnum = {
   monthlyLimit: 'monthlyLimit',
   receiptLimit: 'receiptLimit',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  churchId: 'churchId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const ChurchScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  city: 'city',
+  district: 'district',
+  address: 'address',
+  phone: 'phone',
+  email: 'email',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChurchScalarFieldEnum = (typeof ChurchScalarFieldEnum)[keyof typeof ChurchScalarFieldEnum]
+
+
+export const ChurchMonthlyFinancialReportScalarFieldEnum = {
+  id: 'id',
+  churchId: 'churchId',
+  month: 'month',
+  year: 'year',
+  status: 'status',
+  totalTithe: 'totalTithe',
+  totalSpecialOfferings: 'totalSpecialOfferings',
+  totalIncome: 'totalIncome',
+  fundIncome: 'fundIncome',
+  fundExpenses: 'fundExpenses',
+  fundBalance: 'fundBalance',
+  distributionGC: 'distributionGC',
+  distributionMENA: 'distributionMENA',
+  distributionWAF: 'distributionWAF',
+  distributionLocal: 'distributionLocal',
+  distributionOther: 'distributionOther',
+  distributionTotal: 'distributionTotal',
+  bankBalance: 'bankBalance',
+  priorMonthBalance: 'priorMonthBalance',
+  totalDeposits: 'totalDeposits',
+  expectedBalance: 'expectedBalance',
+  variance: 'variance',
+  reconciliationNotes: 'reconciliationNotes',
+  adminNotes: 'adminNotes',
+  submissionDate: 'submissionDate',
+  approvalDate: 'approvalDate',
+  submittedById: 'submittedById',
+  approvedById: 'approvedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChurchMonthlyFinancialReportScalarFieldEnum = (typeof ChurchMonthlyFinancialReportScalarFieldEnum)[keyof typeof ChurchMonthlyFinancialReportScalarFieldEnum]
+
+
+export const TitheOfferingDetailScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  type: 'type',
+  donorName: 'donorName',
+  amount: 'amount',
+  date: 'date',
+  notes: 'notes'
+} as const
+
+export type TitheOfferingDetailScalarFieldEnum = (typeof TitheOfferingDetailScalarFieldEnum)[keyof typeof TitheOfferingDetailScalarFieldEnum]
+
+
+export const ChurchReportAttachmentScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  originalName: 'originalName',
+  filePath: 'filePath',
+  fileType: 'fileType',
+  fileSize: 'fileSize',
+  section: 'section',
+  uploadDate: 'uploadDate'
+} as const
+
+export type ChurchReportAttachmentScalarFieldEnum = (typeof ChurchReportAttachmentScalarFieldEnum)[keyof typeof ChurchReportAttachmentScalarFieldEnum]
+
+
+export const ChurchDistributionConfigScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  name: 'name',
+  description: 'description',
+  percentage: 'percentage',
+  active: 'active',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChurchDistributionConfigScalarFieldEnum = (typeof ChurchDistributionConfigScalarFieldEnum)[keyof typeof ChurchDistributionConfigScalarFieldEnum]
 
 
 export const ReportScalarFieldEnum = {

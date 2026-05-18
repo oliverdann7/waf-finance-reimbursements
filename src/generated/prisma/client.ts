@@ -47,6 +47,31 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model Church
+ * 
+ */
+export type Church = Prisma.ChurchModel
+/**
+ * Model ChurchMonthlyFinancialReport
+ * 
+ */
+export type ChurchMonthlyFinancialReport = Prisma.ChurchMonthlyFinancialReportModel
+/**
+ * Model TitheOfferingDetail
+ * 
+ */
+export type TitheOfferingDetail = Prisma.TitheOfferingDetailModel
+/**
+ * Model ChurchReportAttachment
+ * 
+ */
+export type ChurchReportAttachment = Prisma.ChurchReportAttachmentModel
+/**
+ * Model ChurchDistributionConfig
+ * 
+ */
+export type ChurchDistributionConfig = Prisma.ChurchDistributionConfigModel
+/**
  * Model Report
  * 
  */

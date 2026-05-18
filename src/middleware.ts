@@ -7,11 +7,14 @@ const { auth } = NextAuth(authConfig);
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  const isAdmin = req.auth?.user?.role === "ADMIN" || req.auth?.user?.role === "SUPER_ADMIN" || req.auth?.user?.role === "TREASURER";
+  const role = req.auth?.user?.role;
+  const isAdmin = role === "ADMIN" || role === "SUPER_ADMIN" || role === "TREASURER";
+  const isChurchUser = role === "CHURCH_TREASURER" || role === "CHURCH_PASTOR" || role === "CHURCH_USER";
 
   const isApiRoute = nextUrl.pathname.startsWith("/api");
   const isAuthRoute = nextUrl.pathname.startsWith("/login") || nextUrl.pathname.startsWith("/register");
   const isAdminRoute = nextUrl.pathname.startsWith("/admin");
+  const isChurchRoute = nextUrl.pathname.startsWith("/church");
 
   if (isApiRoute) return NextResponse.next();
 
@@ -25,6 +28,10 @@ export default auth((req) => {
   }
 
   if (isAdminRoute && !isAdmin) {
+    return NextResponse.redirect(new URL("/dashboard", nextUrl));
+  }
+
+  if (isChurchRoute && !isChurchUser && !isAdmin) {
     return NextResponse.redirect(new URL("/dashboard", nextUrl));
   }
 

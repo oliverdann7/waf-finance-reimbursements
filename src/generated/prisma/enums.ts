@@ -13,7 +13,10 @@ export const Role = {
   WORKER: 'WORKER',
   TREASURER: 'TREASURER',
   ADMIN: 'ADMIN',
-  SUPER_ADMIN: 'SUPER_ADMIN'
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  CHURCH_TREASURER: 'CHURCH_TREASURER',
+  CHURCH_PASTOR: 'CHURCH_PASTOR',
+  CHURCH_USER: 'CHURCH_USER'
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
@@ -38,3 +41,14 @@ export const ExpenseStatus = {
 } as const
 
 export type ExpenseStatus = (typeof ExpenseStatus)[keyof typeof ExpenseStatus]
+
+
+export const ChurchReportStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  UNDER_REVIEW: 'UNDER_REVIEW',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ChurchReportStatus = (typeof ChurchReportStatus)[keyof typeof ChurchReportStatus]

@@ -385,6 +385,11 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  Church: 'Church',
+  ChurchMonthlyFinancialReport: 'ChurchMonthlyFinancialReport',
+  TitheOfferingDetail: 'TitheOfferingDetail',
+  ChurchReportAttachment: 'ChurchReportAttachment',
+  ChurchDistributionConfig: 'ChurchDistributionConfig',
   Report: 'Report',
   Expense: 'Expense',
   Receipt: 'Receipt',
@@ -404,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "report" | "expense" | "receipt" | "reimbursementRule"
+    modelProps: "user" | "church" | "churchMonthlyFinancialReport" | "titheOfferingDetail" | "churchReportAttachment" | "churchDistributionConfig" | "report" | "expense" | "receipt" | "reimbursementRule"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -479,6 +484,376 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    Church: {
+      payload: Prisma.$ChurchPayload<ExtArgs>
+      fields: Prisma.ChurchFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ChurchFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ChurchFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchPayload>
+        }
+        findFirst: {
+          args: Prisma.ChurchFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ChurchFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchPayload>
+        }
+        findMany: {
+          args: Prisma.ChurchFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchPayload>[]
+        }
+        create: {
+          args: Prisma.ChurchCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchPayload>
+        }
+        createMany: {
+          args: Prisma.ChurchCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ChurchCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchPayload>[]
+        }
+        delete: {
+          args: Prisma.ChurchDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchPayload>
+        }
+        update: {
+          args: Prisma.ChurchUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchPayload>
+        }
+        deleteMany: {
+          args: Prisma.ChurchDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ChurchUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ChurchUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchPayload>[]
+        }
+        upsert: {
+          args: Prisma.ChurchUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchPayload>
+        }
+        aggregate: {
+          args: Prisma.ChurchAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChurch>
+        }
+        groupBy: {
+          args: Prisma.ChurchGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChurchGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ChurchCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChurchCountAggregateOutputType> | number
+        }
+      }
+    }
+    ChurchMonthlyFinancialReport: {
+      payload: Prisma.$ChurchMonthlyFinancialReportPayload<ExtArgs>
+      fields: Prisma.ChurchMonthlyFinancialReportFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ChurchMonthlyFinancialReportFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchMonthlyFinancialReportPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ChurchMonthlyFinancialReportFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchMonthlyFinancialReportPayload>
+        }
+        findFirst: {
+          args: Prisma.ChurchMonthlyFinancialReportFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchMonthlyFinancialReportPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ChurchMonthlyFinancialReportFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchMonthlyFinancialReportPayload>
+        }
+        findMany: {
+          args: Prisma.ChurchMonthlyFinancialReportFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchMonthlyFinancialReportPayload>[]
+        }
+        create: {
+          args: Prisma.ChurchMonthlyFinancialReportCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchMonthlyFinancialReportPayload>
+        }
+        createMany: {
+          args: Prisma.ChurchMonthlyFinancialReportCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ChurchMonthlyFinancialReportCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchMonthlyFinancialReportPayload>[]
+        }
+        delete: {
+          args: Prisma.ChurchMonthlyFinancialReportDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchMonthlyFinancialReportPayload>
+        }
+        update: {
+          args: Prisma.ChurchMonthlyFinancialReportUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchMonthlyFinancialReportPayload>
+        }
+        deleteMany: {
+          args: Prisma.ChurchMonthlyFinancialReportDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ChurchMonthlyFinancialReportUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ChurchMonthlyFinancialReportUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchMonthlyFinancialReportPayload>[]
+        }
+        upsert: {
+          args: Prisma.ChurchMonthlyFinancialReportUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchMonthlyFinancialReportPayload>
+        }
+        aggregate: {
+          args: Prisma.ChurchMonthlyFinancialReportAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChurchMonthlyFinancialReport>
+        }
+        groupBy: {
+          args: Prisma.ChurchMonthlyFinancialReportGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChurchMonthlyFinancialReportGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ChurchMonthlyFinancialReportCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChurchMonthlyFinancialReportCountAggregateOutputType> | number
+        }
+      }
+    }
+    TitheOfferingDetail: {
+      payload: Prisma.$TitheOfferingDetailPayload<ExtArgs>
+      fields: Prisma.TitheOfferingDetailFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TitheOfferingDetailFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitheOfferingDetailPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TitheOfferingDetailFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitheOfferingDetailPayload>
+        }
+        findFirst: {
+          args: Prisma.TitheOfferingDetailFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitheOfferingDetailPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TitheOfferingDetailFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitheOfferingDetailPayload>
+        }
+        findMany: {
+          args: Prisma.TitheOfferingDetailFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitheOfferingDetailPayload>[]
+        }
+        create: {
+          args: Prisma.TitheOfferingDetailCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitheOfferingDetailPayload>
+        }
+        createMany: {
+          args: Prisma.TitheOfferingDetailCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TitheOfferingDetailCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitheOfferingDetailPayload>[]
+        }
+        delete: {
+          args: Prisma.TitheOfferingDetailDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitheOfferingDetailPayload>
+        }
+        update: {
+          args: Prisma.TitheOfferingDetailUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitheOfferingDetailPayload>
+        }
+        deleteMany: {
+          args: Prisma.TitheOfferingDetailDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TitheOfferingDetailUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TitheOfferingDetailUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitheOfferingDetailPayload>[]
+        }
+        upsert: {
+          args: Prisma.TitheOfferingDetailUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TitheOfferingDetailPayload>
+        }
+        aggregate: {
+          args: Prisma.TitheOfferingDetailAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTitheOfferingDetail>
+        }
+        groupBy: {
+          args: Prisma.TitheOfferingDetailGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TitheOfferingDetailGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TitheOfferingDetailCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TitheOfferingDetailCountAggregateOutputType> | number
+        }
+      }
+    }
+    ChurchReportAttachment: {
+      payload: Prisma.$ChurchReportAttachmentPayload<ExtArgs>
+      fields: Prisma.ChurchReportAttachmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ChurchReportAttachmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchReportAttachmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ChurchReportAttachmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchReportAttachmentPayload>
+        }
+        findFirst: {
+          args: Prisma.ChurchReportAttachmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchReportAttachmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ChurchReportAttachmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchReportAttachmentPayload>
+        }
+        findMany: {
+          args: Prisma.ChurchReportAttachmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchReportAttachmentPayload>[]
+        }
+        create: {
+          args: Prisma.ChurchReportAttachmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchReportAttachmentPayload>
+        }
+        createMany: {
+          args: Prisma.ChurchReportAttachmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ChurchReportAttachmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchReportAttachmentPayload>[]
+        }
+        delete: {
+          args: Prisma.ChurchReportAttachmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchReportAttachmentPayload>
+        }
+        update: {
+          args: Prisma.ChurchReportAttachmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchReportAttachmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.ChurchReportAttachmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ChurchReportAttachmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ChurchReportAttachmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchReportAttachmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.ChurchReportAttachmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchReportAttachmentPayload>
+        }
+        aggregate: {
+          args: Prisma.ChurchReportAttachmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChurchReportAttachment>
+        }
+        groupBy: {
+          args: Prisma.ChurchReportAttachmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChurchReportAttachmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ChurchReportAttachmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChurchReportAttachmentCountAggregateOutputType> | number
+        }
+      }
+    }
+    ChurchDistributionConfig: {
+      payload: Prisma.$ChurchDistributionConfigPayload<ExtArgs>
+      fields: Prisma.ChurchDistributionConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ChurchDistributionConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchDistributionConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ChurchDistributionConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchDistributionConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.ChurchDistributionConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchDistributionConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ChurchDistributionConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchDistributionConfigPayload>
+        }
+        findMany: {
+          args: Prisma.ChurchDistributionConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchDistributionConfigPayload>[]
+        }
+        create: {
+          args: Prisma.ChurchDistributionConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchDistributionConfigPayload>
+        }
+        createMany: {
+          args: Prisma.ChurchDistributionConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ChurchDistributionConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchDistributionConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.ChurchDistributionConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchDistributionConfigPayload>
+        }
+        update: {
+          args: Prisma.ChurchDistributionConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchDistributionConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.ChurchDistributionConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ChurchDistributionConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ChurchDistributionConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchDistributionConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.ChurchDistributionConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ChurchDistributionConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.ChurchDistributionConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateChurchDistributionConfig>
+        }
+        groupBy: {
+          args: Prisma.ChurchDistributionConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChurchDistributionConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ChurchDistributionConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ChurchDistributionConfigCountAggregateOutputType> | number
         }
       }
     }
@@ -830,10 +1205,104 @@ export const UserScalarFieldEnum = {
   monthlyLimit: 'monthlyLimit',
   receiptLimit: 'receiptLimit',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  churchId: 'churchId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const ChurchScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  city: 'city',
+  district: 'district',
+  address: 'address',
+  phone: 'phone',
+  email: 'email',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChurchScalarFieldEnum = (typeof ChurchScalarFieldEnum)[keyof typeof ChurchScalarFieldEnum]
+
+
+export const ChurchMonthlyFinancialReportScalarFieldEnum = {
+  id: 'id',
+  churchId: 'churchId',
+  month: 'month',
+  year: 'year',
+  status: 'status',
+  totalTithe: 'totalTithe',
+  totalSpecialOfferings: 'totalSpecialOfferings',
+  totalIncome: 'totalIncome',
+  fundIncome: 'fundIncome',
+  fundExpenses: 'fundExpenses',
+  fundBalance: 'fundBalance',
+  distributionGC: 'distributionGC',
+  distributionMENA: 'distributionMENA',
+  distributionWAF: 'distributionWAF',
+  distributionLocal: 'distributionLocal',
+  distributionOther: 'distributionOther',
+  distributionTotal: 'distributionTotal',
+  bankBalance: 'bankBalance',
+  priorMonthBalance: 'priorMonthBalance',
+  totalDeposits: 'totalDeposits',
+  expectedBalance: 'expectedBalance',
+  variance: 'variance',
+  reconciliationNotes: 'reconciliationNotes',
+  adminNotes: 'adminNotes',
+  submissionDate: 'submissionDate',
+  approvalDate: 'approvalDate',
+  submittedById: 'submittedById',
+  approvedById: 'approvedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChurchMonthlyFinancialReportScalarFieldEnum = (typeof ChurchMonthlyFinancialReportScalarFieldEnum)[keyof typeof ChurchMonthlyFinancialReportScalarFieldEnum]
+
+
+export const TitheOfferingDetailScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  type: 'type',
+  donorName: 'donorName',
+  amount: 'amount',
+  date: 'date',
+  notes: 'notes'
+} as const
+
+export type TitheOfferingDetailScalarFieldEnum = (typeof TitheOfferingDetailScalarFieldEnum)[keyof typeof TitheOfferingDetailScalarFieldEnum]
+
+
+export const ChurchReportAttachmentScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  originalName: 'originalName',
+  filePath: 'filePath',
+  fileType: 'fileType',
+  fileSize: 'fileSize',
+  section: 'section',
+  uploadDate: 'uploadDate'
+} as const
+
+export type ChurchReportAttachmentScalarFieldEnum = (typeof ChurchReportAttachmentScalarFieldEnum)[keyof typeof ChurchReportAttachmentScalarFieldEnum]
+
+
+export const ChurchDistributionConfigScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  name: 'name',
+  description: 'description',
+  percentage: 'percentage',
+  active: 'active',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChurchDistributionConfigScalarFieldEnum = (typeof ChurchDistributionConfigScalarFieldEnum)[keyof typeof ChurchDistributionConfigScalarFieldEnum]
 
 
 export const ReportScalarFieldEnum = {
@@ -1003,6 +1472,13 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -1013,6 +1489,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ChurchReportStatus'
+ */
+export type EnumChurchReportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChurchReportStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ChurchReportStatus[]'
+ */
+export type ListEnumChurchReportStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChurchReportStatus[]'>
     
 
 
@@ -1041,13 +1531,6 @@ export type EnumExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
  * Reference to a field of type 'ExpenseStatus[]'
  */
 export type ListEnumExpenseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ExpenseStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 /**
@@ -1161,6 +1644,11 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  church?: Prisma.ChurchOmit
+  churchMonthlyFinancialReport?: Prisma.ChurchMonthlyFinancialReportOmit
+  titheOfferingDetail?: Prisma.TitheOfferingDetailOmit
+  churchReportAttachment?: Prisma.ChurchReportAttachmentOmit
+  churchDistributionConfig?: Prisma.ChurchDistributionConfigOmit
   report?: Prisma.ReportOmit
   expense?: Prisma.ExpenseOmit
   receipt?: Prisma.ReceiptOmit
