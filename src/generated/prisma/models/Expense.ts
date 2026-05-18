@@ -808,6 +808,7 @@ export type ExpenseCreateOrConnectWithoutUserInput = {
 
 export type ExpenseCreateManyUserInputEnvelope = {
   data: Prisma.ExpenseCreateManyUserInput | Prisma.ExpenseCreateManyUserInput[]
+  skipDuplicates?: boolean
 }
 
 export type ExpenseUpsertWithWhereUniqueWithoutUserInput = {
@@ -896,6 +897,7 @@ export type ExpenseCreateOrConnectWithoutReportInput = {
 
 export type ExpenseCreateManyReportInputEnvelope = {
   data: Prisma.ExpenseCreateManyReportInput | Prisma.ExpenseCreateManyReportInput[]
+  skipDuplicates?: boolean
 }
 
 export type ExpenseUpsertWithWhereUniqueWithoutReportInput = {
@@ -2003,6 +2005,7 @@ export type ExpenseCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * The data used to create many Expenses.
    */
   data: Prisma.ExpenseCreateManyInput | Prisma.ExpenseCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -2021,6 +2024,7 @@ export type ExpenseCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * The data used to create many Expenses.
    */
   data: Prisma.ExpenseCreateManyInput | Prisma.ExpenseCreateManyInput[]
+  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

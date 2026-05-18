@@ -1176,6 +1176,7 @@ export type ReimbursementRuleCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many ReimbursementRules.
    */
   data: Prisma.ReimbursementRuleCreateManyInput | Prisma.ReimbursementRuleCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
@@ -1194,6 +1195,7 @@ export type ReimbursementRuleCreateManyAndReturnArgs<ExtArgs extends runtime.Typ
    * The data used to create many ReimbursementRules.
    */
   data: Prisma.ReimbursementRuleCreateManyInput | Prisma.ReimbursementRuleCreateManyInput[]
+  skipDuplicates?: boolean
 }
 
 /**
