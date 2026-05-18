@@ -1,26 +1,58 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState, startTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, FileText, Shield, CreditCard, Receipt } from "lucide-react";
+import { ArrowRight, FileText, Shield, CreditCard, Receipt, AlertTriangle } from "lucide-react";
 
 export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.push("/dashboard");
+      const role = session?.user?.role;
+      if (role === "ADMIN" || role === "SUPER_ADMIN" || role === "TREASURER") {
+        router.push("/admin");
+      } else if (role === "CHURCH_TREASURER" || role === "CHURCH_PASTOR" || role === "CHURCH_USER") {
+        router.push("/church/dashboard");
+      } else {
+        router.push("/dashboard");
+      }
     }
-  }, [status, router]);
+  }, [status, session, router]);
 
-  if (status === "loading") {
+  useEffect(() => {
+    if (status === "loading") {
+      const timer = setTimeout(() => setTimedOut(true), 8000);
+      return () => clearTimeout(timer);
+    }
+    startTransition(() => setTimedOut(false));
+  }, [status]);
+
+  if (status === "loading" && !timedOut) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50">
         <div className="animate-pulse text-primary font-semibold">Loading...</div>
+      </div>
+    );
+  }
+
+  if (timedOut) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div className="text-center max-w-md mx-auto p-8">
+          <AlertTriangle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold mb-2">Connection Issue</h2>
+          <p className="text-muted-foreground mb-6">
+            Unable to connect to the server. This may be a database connection problem.
+            Please try refreshing the page or contact support.
+          </p>
+          <Button onClick={() => window.location.reload()}>Refresh Page</Button>
+        </div>
       </div>
     );
   }
