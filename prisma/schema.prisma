@@ -21,9 +21,116 @@ model User {
   receiptLimit    Float     @default(500)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  churchId        String?
+  church          Church?   @relation(fields: [churchId], references: [id])
   expenses        Expense[]
   receipts        Receipt[]
   reports         Report[]
+
+  @@index([churchId])
+}
+
+model Church {
+  id        String   @id @default(cuid())
+  name      String
+  code      String   @unique
+  city      String   @default("")
+  district  String   @default("")
+  address   String   @default("")
+  phone     String   @default("")
+  email     String   @default("")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users            User[]
+  financialReports ChurchMonthlyFinancialReport[]
+}
+
+model ChurchMonthlyFinancialReport {
+  id              String             @id @default(cuid())
+  churchId        String
+  month           Int
+  year            Int
+  status          ChurchReportStatus @default(DRAFT)
+
+  totalTithe           Float  @default(0)
+  totalSpecialOfferings Float  @default(0)
+  totalIncome          Float  @default(0)
+
+  fundIncome   Float @default(0)
+  fundExpenses Float @default(0)
+  fundBalance  Float @default(0)
+
+  distributionGC    Float @default(0)
+  distributionMENA  Float @default(0)
+  distributionWAF   Float @default(0)
+  distributionLocal Float @default(0)
+  distributionOther Float @default(0)
+  distributionTotal Float @default(0)
+
+  bankBalance         Float  @default(0)
+  priorMonthBalance   Float  @default(0)
+  totalDeposits       Float  @default(0)
+  expectedBalance     Float  @default(0)
+  variance            Float  @default(0)
+  reconciliationNotes String @default("")
+
+  adminNotes     String    @default("")
+  submissionDate DateTime?
+  approvalDate   DateTime?
+  submittedById  String?
+  approvedById   String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  church             Church                 @relation(fields: [churchId], references: [id], onDelete: Cascade)
+  titheOfferingDetails TitheOfferingDetail[]
+  attachments          ChurchReportAttachment[]
+
+  @@unique([churchId, month, year])
+  @@index([churchId])
+  @@index([status])
+}
+
+model TitheOfferingDetail {
+  id        String    @id @default(cuid())
+  reportId  String
+  type      String
+  donorName String
+  amount    Float
+  date      DateTime?
+  notes     String    @default("")
+
+  report ChurchMonthlyFinancialReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+model ChurchReportAttachment {
+  id           String   @id @default(cuid())
+  reportId     String
+  originalName String
+  filePath     String
+  fileType     String
+  fileSize     Int
+  section      String   @default("other")
+  uploadDate   DateTime @default(now())
+
+  report ChurchMonthlyFinancialReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@index([reportId])
+}
+
+model ChurchDistributionConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  description String   @default("")
+  percentage  Float
+  active      Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
 }
 
 model Report {
@@ -108,6 +215,9 @@ enum Role {
   TREASURER
   ADMIN
   SUPER_ADMIN
+  CHURCH_TREASURER
+  CHURCH_PASTOR
+  CHURCH_USER
 }
 
 enum ReportStatus {
@@ -121,6 +231,14 @@ enum ReportStatus {
 
 enum ExpenseStatus {
   PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ChurchReportStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
   APPROVED
   REJECTED
 }

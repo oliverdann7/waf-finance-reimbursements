@@ -1,4 +1,4 @@
-export type Role = "WORKER" | "TREASURER" | "ADMIN" | "SUPER_ADMIN";
+export type Role = "WORKER" | "TREASURER" | "ADMIN" | "SUPER_ADMIN" | "CHURCH_TREASURER" | "CHURCH_PASTOR" | "CHURCH_USER";
 
 export type ReportStatus =
   | "DRAFT"
@@ -9,6 +9,35 @@ export type ReportStatus =
   | "PAID";
 
 export type ExpenseStatus = "PENDING" | "APPROVED" | "REJECTED";
+
+export type ChurchRole = "CHURCH_TREASURER" | "CHURCH_PASTOR" | "CHURCH_USER";
+
+export type ChurchReportStatus =
+  | "DRAFT"
+  | "SUBMITTED"
+  | "UNDER_REVIEW"
+  | "APPROVED"
+  | "REJECTED";
+
+export const CHURCH_REPORT_STATUSES: {
+  value: ChurchReportStatus;
+  labelKey: string;
+  color: string;
+}[] = [
+  { value: "DRAFT", labelKey: "church.status.draft", color: "bg-gray-100 text-gray-800" },
+  { value: "SUBMITTED", labelKey: "church.status.submitted", color: "bg-blue-100 text-blue-800" },
+  { value: "UNDER_REVIEW", labelKey: "church.status.underReview", color: "bg-yellow-100 text-yellow-800" },
+  { value: "APPROVED", labelKey: "church.status.approved", color: "bg-green-100 text-green-800" },
+  { value: "REJECTED", labelKey: "church.status.rejected", color: "bg-red-100 text-red-800" },
+];
+
+export const DISTRIBUTION_KEYS = [
+  { key: "distributionGC", labelKey: "church.distribution.gc", defaultPercentage: 20 },
+  { key: "distributionMENA", labelKey: "church.distribution.mena", defaultPercentage: 5 },
+  { key: "distributionWAF", labelKey: "church.distribution.waf", defaultPercentage: 15 },
+  { key: "distributionLocal", labelKey: "church.distribution.local", defaultPercentage: 55 },
+  { key: "distributionOther", labelKey: "church.distribution.other", defaultPercentage: 5 },
+];
 
 export const EXPENSE_CATEGORIES = [
   { value: "BUS", label: "Bus", icon: "🚌" },

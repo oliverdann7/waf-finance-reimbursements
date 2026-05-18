@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { PrismaClient } from "../src/generated/prisma/client";
+import { PrismaClient, Role } from "../src/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import { hash } from "bcryptjs";
@@ -144,12 +144,178 @@ async function main() {
     });
   }
 
+  const ankaraChurch = await prisma.church.upsert({
+    where: { code: "ANKARA-GRACE" },
+    update: {},
+    create: {
+      name: "Ankara Grace Church",
+      code: "ANKARA-GRACE",
+      city: "Ankara",
+      district: "Çankaya",
+      address: "123 Main Street, Çankaya",
+      phone: "+90-312-555-0100",
+      email: "ankara.grace@waf.org",
+      isActive: true,
+    },
+  });
+
+  const istanbulChurch = await prisma.church.upsert({
+    where: { code: "IST-LIGHT" },
+    update: {},
+    create: {
+      name: "Istanbul Light Church",
+      code: "IST-LIGHT",
+      city: "Istanbul",
+      district: "Kadıköy",
+      address: "456 Bağdat Avenue, Kadıköy",
+      phone: "+90-216-555-0200",
+      email: "istanbul.light@waf.org",
+      isActive: true,
+    },
+  });
+
+  const churchUsers = [
+    {
+      name: "Ankara Treasurer",
+      email: "ankara.treasurer@waf.org",
+      role: "CHURCH_TREASURER",
+      churchId: ankaraChurch.id,
+      city: "Ankara",
+    },
+    {
+      name: "Ankara Pastor",
+      email: "ankara.pastor@waf.org",
+      role: "CHURCH_PASTOR",
+      churchId: ankaraChurch.id,
+      city: "Ankara",
+    },
+    {
+      name: "Istanbul Treasurer",
+      email: "istanbul.treasurer@waf.org",
+      role: "CHURCH_TREASURER",
+      churchId: istanbulChurch.id,
+      city: "Istanbul",
+    },
+  ];
+
+  for (const cu of churchUsers) {
+    await prisma.user.upsert({
+      where: { email: cu.email },
+      update: { churchId: cu.churchId, role: cu.role as Role },
+      create: {
+        name: cu.name,
+        email: cu.email,
+        passwordHash,
+        role: cu.role as Role,
+        city: cu.city,
+        department: "Church",
+        title: cu.role.replace("_", " "),
+        churchId: cu.churchId,
+      },
+    });
+  }
+
+  const distConfigs = [
+    { key: "distributionGC", name: "GC", description: "General Conference", percentage: 20, active: true },
+    { key: "distributionMENA", name: "MENA", description: "Middle East & North Africa", percentage: 5, active: true },
+    { key: "distributionWAF", name: "WAF", description: "West Africa Field", percentage: 15, active: true },
+    { key: "distributionLocal", name: "Local", description: "Local Church", percentage: 55, active: true },
+    { key: "distributionOther", name: "Other", description: "Other Distribution", percentage: 5, active: true },
+  ];
+
+  for (const dc of distConfigs) {
+    await prisma.churchDistributionConfig.upsert({
+      where: { key: dc.key },
+      update: { percentage: dc.percentage, active: dc.active },
+      create: dc,
+    });
+  }
+
+  for (const church of [ankaraChurch, istanbulChurch]) {
+    const existingChurchReport = await prisma.churchMonthlyFinancialReport.findUnique({
+      where: { churchId_month_year: { churchId: church.id, month: currentMonth, year: currentYear } },
+    });
+
+    if (!existingChurchReport) {
+      const totalTithe = 15000 + Math.random() * 5000;
+      const totalSpecialOfferings = 5000 + Math.random() * 3000;
+      const totalIncome = totalTithe + totalSpecialOfferings;
+      const distributionGC = totalIncome * 0.2;
+      const distributionMENA = totalIncome * 0.05;
+      const distributionWAF = totalIncome * 0.15;
+      const distributionLocal = totalIncome * 0.55;
+      const distributionOther = totalIncome * 0.05;
+
+      const report = await prisma.churchMonthlyFinancialReport.create({
+        data: {
+          churchId: church.id,
+          month: currentMonth,
+          year: currentYear,
+          status: "SUBMITTED",
+          totalTithe: Math.round(totalTithe * 100) / 100,
+          totalSpecialOfferings: Math.round(totalSpecialOfferings * 100) / 100,
+          totalIncome: Math.round(totalIncome * 100) / 100,
+          fundIncome: Math.round(totalIncome * 0.1 * 100) / 100,
+          fundExpenses: Math.round(totalIncome * 0.03 * 100) / 100,
+          fundBalance: Math.round(totalIncome * 0.07 * 100) / 100,
+          distributionGC: Math.round(distributionGC * 100) / 100,
+          distributionMENA: Math.round(distributionMENA * 100) / 100,
+          distributionWAF: Math.round(distributionWAF * 100) / 100,
+          distributionLocal: Math.round(distributionLocal * 100) / 100,
+          distributionOther: Math.round(distributionOther * 100) / 100,
+          distributionTotal: Math.round(totalIncome * 100) / 100,
+          bankBalance: Math.round((totalIncome + 2000) * 100) / 100,
+          priorMonthBalance: 2000,
+          totalDeposits: Math.round(totalIncome * 100) / 100,
+          expectedBalance: Math.round((totalIncome + 2000) * 100) / 100,
+          variance: 0,
+          reconciliationNotes: "",
+          adminNotes: "",
+          submissionDate: new Date(currentYear, currentMonth - 1, 28),
+        },
+      });
+
+      const donorNames = ["John Smith", "Mary Johnson", "David Brown", "Sarah Wilson", "Michael Lee"];
+      const titheAmount = totalTithe / 3;
+
+      for (let i = 0; i < 3; i++) {
+        await prisma.titheOfferingDetail.create({
+          data: {
+            reportId: report.id,
+            type: "TITHE",
+            donorName: donorNames[i],
+            amount: Math.round(titheAmount * 100) / 100,
+            date: new Date(currentYear, currentMonth - 1, 10 + i * 5),
+            notes: `Weekly tithe from ${donorNames[i]}`,
+          },
+        });
+      }
+
+      const offeringAmount = totalSpecialOfferings / 2;
+      for (let i = 0; i < 2; i++) {
+        await prisma.titheOfferingDetail.create({
+          data: {
+            reportId: report.id,
+            type: "SPECIAL_OFFERING",
+            donorName: donorNames[i + 3],
+            amount: Math.round(offeringAmount * 100) / 100,
+            date: new Date(currentYear, currentMonth - 1, 15 + i * 7),
+            notes: `Special offering for ${i === 0 ? "building fund" : "missions"}`,
+          },
+        });
+      }
+    }
+  }
+
   console.log("Seeding complete!");
   console.log(`\nDemo accounts (password: password123):`);
   console.log("  admin@waf.org (Super Admin)");
   console.log("  treasurer@waf.org (Treasurer)");
   console.log("  ahmet@waf.org, ayse@waf.org, mehmet@waf.org (Workers)");
   console.log("  fatma@waf.org, ali@waf.org (Workers)");
+  console.log("  ankara.treasurer@waf.org (Church Treasurer - Ankara Grace)");
+  console.log("  ankara.pastor@waf.org (Church Pastor - Ankara Grace)");
+  console.log("  istanbul.treasurer@waf.org (Church Treasurer - Istanbul Light)");
 }
 
 main()

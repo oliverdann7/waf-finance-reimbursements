@@ -50,6 +50,7 @@ export type UserMinAggregateOutputType = {
   receiptLimit: number | null
   createdAt: Date | null
   updatedAt: Date | null
+  churchId: string | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -66,6 +67,7 @@ export type UserMaxAggregateOutputType = {
   receiptLimit: number | null
   createdAt: Date | null
   updatedAt: Date | null
+  churchId: string | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -82,6 +84,7 @@ export type UserCountAggregateOutputType = {
   receiptLimit: number
   createdAt: number
   updatedAt: number
+  churchId: number
   _all: number
 }
 
@@ -110,6 +113,7 @@ export type UserMinAggregateInputType = {
   receiptLimit?: true
   createdAt?: true
   updatedAt?: true
+  churchId?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -126,6 +130,7 @@ export type UserMaxAggregateInputType = {
   receiptLimit?: true
   createdAt?: true
   updatedAt?: true
+  churchId?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -142,6 +147,7 @@ export type UserCountAggregateInputType = {
   receiptLimit?: true
   createdAt?: true
   updatedAt?: true
+  churchId?: true
   _all?: true
 }
 
@@ -245,6 +251,7 @@ export type UserGroupByOutputType = {
   receiptLimit: number
   createdAt: Date
   updatedAt: Date
+  churchId: string | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -284,6 +291,8 @@ export type UserWhereInput = {
   receiptLimit?: Prisma.FloatFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  churchId?: Prisma.StringNullableFilter<"User"> | string | null
+  church?: Prisma.XOR<Prisma.ChurchNullableScalarRelationFilter, Prisma.ChurchWhereInput> | null
   expenses?: Prisma.ExpenseListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   reports?: Prisma.ReportListRelationFilter
@@ -303,6 +312,8 @@ export type UserOrderByWithRelationInput = {
   receiptLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  churchId?: Prisma.SortOrderInput | Prisma.SortOrder
+  church?: Prisma.ChurchOrderByWithRelationInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   receipts?: Prisma.ReceiptOrderByRelationAggregateInput
   reports?: Prisma.ReportOrderByRelationAggregateInput
@@ -325,6 +336,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   receiptLimit?: Prisma.FloatFilter<"User"> | number
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  churchId?: Prisma.StringNullableFilter<"User"> | string | null
+  church?: Prisma.XOR<Prisma.ChurchNullableScalarRelationFilter, Prisma.ChurchWhereInput> | null
   expenses?: Prisma.ExpenseListRelationFilter
   receipts?: Prisma.ReceiptListRelationFilter
   reports?: Prisma.ReportListRelationFilter
@@ -344,6 +357,7 @@ export type UserOrderByWithAggregationInput = {
   receiptLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  churchId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -368,6 +382,7 @@ export type UserScalarWhereWithAggregatesInput = {
   receiptLimit?: Prisma.FloatWithAggregatesFilter<"User"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  churchId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
 }
 
 export type UserCreateInput = {
@@ -384,6 +399,7 @@ export type UserCreateInput = {
   receiptLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  church?: Prisma.ChurchCreateNestedOneWithoutUsersInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutUserInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutUserInput
@@ -403,6 +419,7 @@ export type UserUncheckedCreateInput = {
   receiptLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  churchId?: string | null
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutUserInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutUserInput
@@ -422,6 +439,7 @@ export type UserUpdateInput = {
   receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  church?: Prisma.ChurchUpdateOneWithoutUsersNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutUserNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutUserNestedInput
@@ -441,6 +459,7 @@ export type UserUncheckedUpdateInput = {
   receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  churchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutUserNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutUserNestedInput
@@ -460,6 +479,7 @@ export type UserCreateManyInput = {
   receiptLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  churchId?: string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -492,6 +512,7 @@ export type UserUncheckedUpdateManyInput = {
   receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  churchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -508,6 +529,7 @@ export type UserCountOrderByAggregateInput = {
   receiptLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  churchId?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -529,6 +551,7 @@ export type UserMaxOrderByAggregateInput = {
   receiptLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  churchId?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -545,11 +568,22 @@ export type UserMinOrderByAggregateInput = {
   receiptLimit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  churchId?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   monthlyLimit?: Prisma.SortOrder
   receiptLimit?: Prisma.SortOrder
+}
+
+export type UserListRelationFilter = {
+  every?: Prisma.UserWhereInput
+  some?: Prisma.UserWhereInput
+  none?: Prisma.UserWhereInput
+}
+
+export type UserOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -575,6 +609,52 @@ export type FloatFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type UserCreateNestedManyWithoutChurchInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChurchInput, Prisma.UserUncheckedCreateWithoutChurchInput> | Prisma.UserCreateWithoutChurchInput[] | Prisma.UserUncheckedCreateWithoutChurchInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChurchInput | Prisma.UserCreateOrConnectWithoutChurchInput[]
+  createMany?: Prisma.UserCreateManyChurchInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUncheckedCreateNestedManyWithoutChurchInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChurchInput, Prisma.UserUncheckedCreateWithoutChurchInput> | Prisma.UserCreateWithoutChurchInput[] | Prisma.UserUncheckedCreateWithoutChurchInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChurchInput | Prisma.UserCreateOrConnectWithoutChurchInput[]
+  createMany?: Prisma.UserCreateManyChurchInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUpdateManyWithoutChurchNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChurchInput, Prisma.UserUncheckedCreateWithoutChurchInput> | Prisma.UserCreateWithoutChurchInput[] | Prisma.UserUncheckedCreateWithoutChurchInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChurchInput | Prisma.UserCreateOrConnectWithoutChurchInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutChurchInput | Prisma.UserUpsertWithWhereUniqueWithoutChurchInput[]
+  createMany?: Prisma.UserCreateManyChurchInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutChurchInput | Prisma.UserUpdateWithWhereUniqueWithoutChurchInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutChurchInput | Prisma.UserUpdateManyWithWhereWithoutChurchInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
+export type UserUncheckedUpdateManyWithoutChurchNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutChurchInput, Prisma.UserUncheckedCreateWithoutChurchInput> | Prisma.UserCreateWithoutChurchInput[] | Prisma.UserUncheckedCreateWithoutChurchInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutChurchInput | Prisma.UserCreateOrConnectWithoutChurchInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutChurchInput | Prisma.UserUpsertWithWhereUniqueWithoutChurchInput[]
+  createMany?: Prisma.UserCreateManyChurchInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutChurchInput | Prisma.UserUpdateWithWhereUniqueWithoutChurchInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutChurchInput | Prisma.UserUpdateManyWithWhereWithoutChurchInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
 export type UserCreateNestedOneWithoutReportsInput = {
@@ -619,6 +699,90 @@ export type UserUpdateOneRequiredWithoutReceiptsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceiptsInput, Prisma.UserUpdateWithoutReceiptsInput>, Prisma.UserUncheckedUpdateWithoutReceiptsInput>
 }
 
+export type UserCreateWithoutChurchInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  city?: string
+  department?: string
+  title?: string
+  defaultCurrency?: string
+  monthlyLimit?: number
+  receiptLimit?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutChurchInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  city?: string
+  department?: string
+  title?: string
+  defaultCurrency?: string
+  monthlyLimit?: number
+  receiptLimit?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutUserInput
+  receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
+  reports?: Prisma.ReportUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutChurchInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutChurchInput, Prisma.UserUncheckedCreateWithoutChurchInput>
+}
+
+export type UserCreateManyChurchInputEnvelope = {
+  data: Prisma.UserCreateManyChurchInput | Prisma.UserCreateManyChurchInput[]
+  skipDuplicates?: boolean
+}
+
+export type UserUpsertWithWhereUniqueWithoutChurchInput = {
+  where: Prisma.UserWhereUniqueInput
+  update: Prisma.XOR<Prisma.UserUpdateWithoutChurchInput, Prisma.UserUncheckedUpdateWithoutChurchInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutChurchInput, Prisma.UserUncheckedCreateWithoutChurchInput>
+}
+
+export type UserUpdateWithWhereUniqueWithoutChurchInput = {
+  where: Prisma.UserWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutChurchInput, Prisma.UserUncheckedUpdateWithoutChurchInput>
+}
+
+export type UserUpdateManyWithWhereWithoutChurchInput = {
+  where: Prisma.UserScalarWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutChurchInput>
+}
+
+export type UserScalarWhereInput = {
+  AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  OR?: Prisma.UserScalarWhereInput[]
+  NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  id?: Prisma.StringFilter<"User"> | string
+  name?: Prisma.StringFilter<"User"> | string
+  email?: Prisma.StringFilter<"User"> | string
+  passwordHash?: Prisma.StringFilter<"User"> | string
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
+  city?: Prisma.StringFilter<"User"> | string
+  department?: Prisma.StringFilter<"User"> | string
+  title?: Prisma.StringFilter<"User"> | string
+  defaultCurrency?: Prisma.StringFilter<"User"> | string
+  monthlyLimit?: Prisma.FloatFilter<"User"> | number
+  receiptLimit?: Prisma.FloatFilter<"User"> | number
+  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  churchId?: Prisma.StringNullableFilter<"User"> | string | null
+}
+
 export type UserCreateWithoutReportsInput = {
   id?: string
   name: string
@@ -633,6 +797,7 @@ export type UserCreateWithoutReportsInput = {
   receiptLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  church?: Prisma.ChurchCreateNestedOneWithoutUsersInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutUserInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
 }
@@ -651,6 +816,7 @@ export type UserUncheckedCreateWithoutReportsInput = {
   receiptLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  churchId?: string | null
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutUserInput
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
 }
@@ -685,6 +851,7 @@ export type UserUpdateWithoutReportsInput = {
   receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  church?: Prisma.ChurchUpdateOneWithoutUsersNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutUserNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
 }
@@ -703,6 +870,7 @@ export type UserUncheckedUpdateWithoutReportsInput = {
   receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  churchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutUserNestedInput
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -721,6 +889,7 @@ export type UserCreateWithoutExpensesInput = {
   receiptLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  church?: Prisma.ChurchCreateNestedOneWithoutUsersInput
   receipts?: Prisma.ReceiptCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutUserInput
 }
@@ -739,6 +908,7 @@ export type UserUncheckedCreateWithoutExpensesInput = {
   receiptLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  churchId?: string | null
   receipts?: Prisma.ReceiptUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutUserInput
 }
@@ -773,6 +943,7 @@ export type UserUpdateWithoutExpensesInput = {
   receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  church?: Prisma.ChurchUpdateOneWithoutUsersNestedInput
   receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutUserNestedInput
 }
@@ -791,6 +962,7 @@ export type UserUncheckedUpdateWithoutExpensesInput = {
   receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  churchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -809,6 +981,7 @@ export type UserCreateWithoutReceiptsInput = {
   receiptLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  church?: Prisma.ChurchCreateNestedOneWithoutUsersInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportCreateNestedManyWithoutUserInput
 }
@@ -827,6 +1000,7 @@ export type UserUncheckedCreateWithoutReceiptsInput = {
   receiptLimit?: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  churchId?: string | null
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutUserInput
   reports?: Prisma.ReportUncheckedCreateNestedManyWithoutUserInput
 }
@@ -861,6 +1035,7 @@ export type UserUpdateWithoutReceiptsInput = {
   receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  church?: Prisma.ChurchUpdateOneWithoutUsersNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUpdateManyWithoutUserNestedInput
 }
@@ -879,8 +1054,79 @@ export type UserUncheckedUpdateWithoutReceiptsInput = {
   receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  churchId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutUserNestedInput
   reports?: Prisma.ReportUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateManyChurchInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  role?: $Enums.Role
+  city?: string
+  department?: string
+  title?: string
+  defaultCurrency?: string
+  monthlyLimit?: number
+  receiptLimit?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type UserUpdateWithoutChurchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlyLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expenses?: Prisma.ExpenseUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutChurchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlyLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutUserNestedInput
+  receipts?: Prisma.ReceiptUncheckedUpdateManyWithoutUserNestedInput
+  reports?: Prisma.ReportUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateManyWithoutChurchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  city?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultCurrency?: Prisma.StringFieldUpdateOperationsInput | string
+  monthlyLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  receiptLimit?: Prisma.FloatFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -946,6 +1192,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   receiptLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  churchId?: boolean
+  church?: boolean | Prisma.User$churchArgs<ExtArgs>
   expenses?: boolean | Prisma.User$expensesArgs<ExtArgs>
   receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
   reports?: boolean | Prisma.User$reportsArgs<ExtArgs>
@@ -966,6 +1214,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   receiptLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  churchId?: boolean
+  church?: boolean | Prisma.User$churchArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -982,6 +1232,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   receiptLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  churchId?: boolean
+  church?: boolean | Prisma.User$churchArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -998,21 +1250,28 @@ export type UserSelectScalar = {
   receiptLimit?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  churchId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "role" | "city" | "department" | "title" | "defaultCurrency" | "monthlyLimit" | "receiptLimit" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "role" | "city" | "department" | "title" | "defaultCurrency" | "monthlyLimit" | "receiptLimit" | "createdAt" | "updatedAt" | "churchId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  church?: boolean | Prisma.User$churchArgs<ExtArgs>
   expenses?: boolean | Prisma.User$expensesArgs<ExtArgs>
   receipts?: boolean | Prisma.User$receiptsArgs<ExtArgs>
   reports?: boolean | Prisma.User$reportsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  church?: boolean | Prisma.User$churchArgs<ExtArgs>
+}
+export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  church?: boolean | Prisma.User$churchArgs<ExtArgs>
+}
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    church: Prisma.$ChurchPayload<ExtArgs> | null
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
     receipts: Prisma.$ReceiptPayload<ExtArgs>[]
     reports: Prisma.$ReportPayload<ExtArgs>[]
@@ -1031,6 +1290,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     receiptLimit: number
     createdAt: Date
     updatedAt: Date
+    churchId: string | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1425,6 +1685,7 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  church<T extends Prisma.User$churchArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$churchArgs<ExtArgs>>): Prisma.Prisma__ChurchClient<runtime.Types.Result.GetResult<Prisma.$ChurchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   expenses<T extends Prisma.User$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receipts<T extends Prisma.User$receiptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receiptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReceiptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reports<T extends Prisma.User$reportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1470,6 +1731,7 @@ export interface UserFieldRefs {
   readonly receiptLimit: Prisma.FieldRef<"User", 'Float'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly churchId: Prisma.FieldRef<"User", 'String'>
 }
     
 
@@ -1724,6 +1986,10 @@ export type UserCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    */
   data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1794,6 +2060,10 @@ export type UserUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Users to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1860,6 +2130,25 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * User.church
+ */
+export type User$churchArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Church
+   */
+  select?: Prisma.ChurchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Church
+   */
+  omit?: Prisma.ChurchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChurchInclude<ExtArgs> | null
+  where?: Prisma.ChurchWhereInput
 }
 
 /**
