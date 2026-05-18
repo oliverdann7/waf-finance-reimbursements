@@ -15,11 +15,16 @@ export default auth((req) => {
   const isAuthRoute = nextUrl.pathname.startsWith("/login") || nextUrl.pathname.startsWith("/register");
   const isAdminRoute = nextUrl.pathname.startsWith("/admin");
   const isChurchRoute = nextUrl.pathname.startsWith("/church");
+  const isDashboard = nextUrl.pathname === "/dashboard";
 
   if (isApiRoute) return NextResponse.next();
 
   if (isAuthRoute) {
-    if (isLoggedIn) return NextResponse.redirect(new URL("/dashboard", nextUrl));
+    if (isLoggedIn) {
+      if (isAdmin) return NextResponse.redirect(new URL("/admin", nextUrl));
+      if (isChurchUser) return NextResponse.redirect(new URL("/church/dashboard", nextUrl));
+      return NextResponse.redirect(new URL("/dashboard", nextUrl));
+    }
     return NextResponse.next();
   }
 
@@ -28,11 +33,17 @@ export default auth((req) => {
   }
 
   if (isAdminRoute && !isAdmin) {
+    if (isChurchUser) return NextResponse.redirect(new URL("/church/dashboard", nextUrl));
     return NextResponse.redirect(new URL("/dashboard", nextUrl));
   }
 
   if (isChurchRoute && !isChurchUser && !isAdmin) {
     return NextResponse.redirect(new URL("/dashboard", nextUrl));
+  }
+
+  if (isDashboard) {
+    if (isAdmin) return NextResponse.redirect(new URL("/admin", nextUrl));
+    if (isChurchUser) return NextResponse.redirect(new URL("/church/dashboard", nextUrl));
   }
 
   return NextResponse.next();
