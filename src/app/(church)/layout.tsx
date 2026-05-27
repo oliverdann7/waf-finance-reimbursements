@@ -7,7 +7,7 @@ export default function ChurchLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background text-foreground">
       <Navbar />
       <div className="flex">
         <Sidebar />

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { FileText, PlusCircle, ArrowRight, Church } from "lucide-react";
+import { FileText, PlusCircle, ArrowRight, Church, Camera, Sparkles } from "lucide-react";
 
 export default async function ChurchDashboardPage() {
   const session = await auth();
@@ -60,6 +60,27 @@ export default async function ChurchDashboardPage() {
         </Card>
       ) : (
         <>
+          <Card className="border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
+            <CardContent className="p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="rounded-full bg-primary/15 p-2.5 text-primary">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="font-semibold">Log this week&apos;s offering</p>
+                  <p className="text-sm text-muted-foreground">
+                    Snap a deposit slip or count sheet — we&apos;ll read the amount and add it to your report.
+                  </p>
+                </div>
+              </div>
+              <Button asChild>
+                <Link href="/church/quick-add">
+                  <Camera className="h-4 w-4" /> Quick Add
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader className="pb-2">

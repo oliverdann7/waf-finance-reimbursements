@@ -1,14 +1,17 @@
 import type { OCRProvider, OCRResult } from "./types";
 import { MockOCRProvider } from "./mock-ocr";
+import { AnthropicVisionProvider } from "./anthropic-vision";
 
 let provider: OCRProvider | null = null;
 
 function getProvider(): OCRProvider {
   if (provider) return provider;
 
-  if (process.env.OCR_API_KEY) {
+  if (process.env.ANTHROPIC_API_KEY) {
+    provider = new AnthropicVisionProvider(process.env.ANTHROPIC_API_KEY);
+  } else if (process.env.OCR_API_KEY) {
     provider = {
-      name: "Real OCR Provider",
+      name: "Generic OCR Provider",
       async processReceipt(buffer, mimeType) {
         const form = new FormData();
         form.append("file", new Blob([buffer as BlobPart], { type: mimeType }), "receipt");

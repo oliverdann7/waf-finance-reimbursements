@@ -15,6 +15,7 @@ import {
   Building2,
   BarChart3,
   Sliders,
+  Camera,
 } from "lucide-react";
 
 const workerLinks = [
@@ -28,6 +29,7 @@ const workerLinks = [
 
 const churchLinks = [
   { href: "/church/dashboard", label: "Church Dashboard", icon: Church },
+  { href: "/church/quick-add", label: "Quick Add Offering", icon: Camera },
   { href: "/church/reports", label: "My Church Reports", icon: FileText },
   { href: "/church/reports/new", label: "New Report", icon: PlusCircle },
 ];
@@ -53,7 +55,7 @@ export function Sidebar() {
   if (isAdmin) links = [...workerLinks, ...adminLinks];
 
   return (
-    <aside className="hidden lg:flex w-64 flex-col border-r bg-white min-h-screen">
+    <aside className="hidden lg:flex w-64 flex-col border-r bg-card min-h-screen">
       <div className="flex h-16 items-center border-b px-6">
         <Link href="/dashboard" className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
@@ -77,7 +79,7 @@ export function Sidebar() {
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive
                   ? "bg-primary/10 text-primary"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
               )}
             >
               <Icon className="h-4 w-4" />
