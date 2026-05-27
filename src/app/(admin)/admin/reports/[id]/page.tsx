@@ -72,6 +72,20 @@ export default function AdminReportDetailPage({ params }: { params: Promise<{ id
     if (status === "authenticated" && isAdmin) load();
   }, [id, status, isAdmin]);
 
+  async function loadReport() {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const res = await fetch(`/api/admin/reports/${id}`, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      const json = await res.json();
+      setReport(json);
+      setComment(json.adminComments || "");
+    } catch {
+      toast.error("Failed to load report");
+    }
+  }
+
   async function handleAction(newStatus: string) {
     setActionLoading(true);
     try {
@@ -82,7 +96,7 @@ export default function AdminReportDetailPage({ params }: { params: Promise<{ id
       });
       if (!res.ok) throw new Error();
       toast.success(`Report ${newStatus.toLowerCase()}!`);
-      router.refresh();
+      await loadReport();
     } catch {
       toast.error("Failed to update report");
     } finally {
@@ -99,7 +113,7 @@ export default function AdminReportDetailPage({ params }: { params: Promise<{ id
       });
       if (!res.ok) throw new Error();
       toast.success(`Expense ${newStatus.toLowerCase()}!`);
-      router.refresh();
+      await loadReport();
     } catch {
       toast.error("Failed to update expense");
     }
