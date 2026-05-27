@@ -38,7 +38,6 @@ export async function evaluateExpenseRules(params: {
   const mileageRate = ruleMap.get("mileage_rate");
   const commCap = ruleMap.get("communication_cap");
   const hospCap = ruleMap.get("hospitality_cap");
-  const utilPct = ruleMap.get("utilities_percentage");
   const receiptMin = ruleMap.get("receipt_min_amount");
   const ageLimit = ruleMap.get("expense_age_limit");
   const maxAmount = ruleMap.get("max_expense_amount");

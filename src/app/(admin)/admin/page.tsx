@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { REPORT_STATUSES, MONTHS } from "@/types";
 import { toast } from "sonner";
-import { FileText, Users, DollarSign, AlertTriangle, Clock, CheckCircle2 } from "lucide-react";
+import { FileText, Users, DollarSign, AlertTriangle, Clock } from "lucide-react";
 import Link from "next/link";
 
 interface AdminStats {

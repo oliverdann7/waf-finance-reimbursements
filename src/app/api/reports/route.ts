@@ -11,7 +11,6 @@ export async function GET(req: Request) {
 
   const { searchParams } = new URL(req.url);
   const status = searchParams.get("status");
-  const search = searchParams.get("search");
 
   const where: Prisma.ReportWhereInput = { userId: session.user.id };
   if (status) where.status = status as Prisma.EnumReportStatusFilter["equals"];
@@ -70,7 +69,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(report, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to create report" }, { status: 500 });
   }
 }

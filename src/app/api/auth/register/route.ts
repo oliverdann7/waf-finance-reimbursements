@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       { id: user.id, name: user.name, email: user.email, role: user.role },
       { status: 201 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to register user" },
       { status: 500 }

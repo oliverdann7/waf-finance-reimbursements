@@ -6,7 +6,6 @@ import { use, useEffect, useState, startTransition } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { REPORT_STATUSES, MONTHS } from "@/types";
 import { toast } from "sonner";
 import { ArrowLeft, FileDown, PlusCircle, Receipt } from "lucide-react";
