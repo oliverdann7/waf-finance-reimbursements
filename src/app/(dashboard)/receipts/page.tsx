@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState, startTransition } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -50,19 +50,34 @@ function ReceiptsContent() {
   }, [status, router]);
 
   const loadReceipts = useCallback(async () => {
-    const res = await fetch("/api/receipts");
-    if (!res.ok) return;
-    const json = await res.json();
-    if (Array.isArray(json)) setReceipts(json);
-    setLoading(false);
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const res = await fetch("/api/receipts", { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (!res.ok) return;
+      const json = await res.json();
+      if (Array.isArray(json)) setReceipts(json);
+    } catch {
+      // fetch failed or timed out
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const loadDraft = useCallback(async () => {
-    const res = await fetch("/api/reports?status=DRAFT");
-    if (!res.ok) return;
-    const reports = (await res.json()) as DraftReport[];
-    if (Array.isArray(reports) && reports.length > 0) {
-      setDraftReportId(reports[0].id);
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const res = await fetch("/api/reports?status=DRAFT", { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (!res.ok) return;
+      const reports = (await res.json()) as DraftReport[];
+      if (Array.isArray(reports) && reports.length > 0) {
+        setDraftReportId(reports[0].id);
+      }
+    } catch {
+      // fetch failed or timed out
     }
   }, []);
 

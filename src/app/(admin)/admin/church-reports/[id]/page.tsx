@@ -93,11 +93,19 @@ export default function AdminChurchReportDetailPage({ params }: { params: Promis
 
   useEffect(() => {
     async function load() {
-      const res = await fetch(`/api/admin/church-reports/${id}`);
-      const json = await res.json();
-      setReport(json);
-      setAdminNotes(json.adminNotes || "");
-      setLoading(false);
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const res = await fetch(`/api/admin/church-reports/${id}`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        const json = await res.json();
+        setReport(json);
+        setAdminNotes(json.adminNotes || "");
+      } catch {
+        toast.error("Failed to load report");
+      } finally {
+        setLoading(false);
+      }
     }
     if (status === "authenticated" && isAdmin) load();
   }, [id, status, isAdmin]);

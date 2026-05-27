@@ -40,10 +40,18 @@ export default function AdminRulesPage() {
 
   useEffect(() => {
     async function load() {
-      const res = await fetch("/api/rules");
-      const json = await res.json();
-      setRules(json);
-      setLoading(false);
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const res = await fetch("/api/rules", { signal: controller.signal });
+        clearTimeout(timeoutId);
+        const json = await res.json();
+        setRules(json);
+      } catch {
+        toast.error("Failed to load rules");
+      } finally {
+        setLoading(false);
+      }
     }
     if (status === "authenticated" && isAdmin) load();
   }, [status, isAdmin]);

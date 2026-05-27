@@ -42,16 +42,24 @@ function AdminReportsList() {
 
   useEffect(() => {
     async function load() {
-      const params = new URLSearchParams();
-      if (statusFilter !== "all") params.set("status", statusFilter);
-      if (search) params.set("search", search);
-      if (city) params.set("city", city);
-      if (month) params.set("month", month);
-      if (category && category !== "all") params.set("category", category);
-      const res = await fetch(`/api/admin/reports?${params}`);
-      const json = await res.json();
-      setReports(json);
-      setLoading(false);
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const params = new URLSearchParams();
+        if (statusFilter !== "all") params.set("status", statusFilter);
+        if (search) params.set("search", search);
+        if (city) params.set("city", city);
+        if (month) params.set("month", month);
+        if (category && category !== "all") params.set("category", category);
+        const res = await fetch(`/api/admin/reports?${params}`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        const json = await res.json();
+        setReports(json);
+      } catch {
+        // fetch failed or timed out
+      } finally {
+        setLoading(false);
+      }
     }
     if (status === "authenticated" && isAdmin) load();
   }, [status, isAdmin, statusFilter, search, city, month, category]);

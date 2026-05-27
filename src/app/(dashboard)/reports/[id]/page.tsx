@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useState, startTransition } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -47,6 +47,15 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
   const router = useRouter();
   const [report, setReport] = useState<ReportDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [sessionTimedOut, setSessionTimedOut] = useState(false);
+
+  useEffect(() => {
+    if (authStatus === "loading") {
+      const timer = setTimeout(() => setSessionTimedOut(true), 10000);
+      return () => clearTimeout(timer);
+    }
+    startTransition(() => setSessionTimedOut(false));
+  }, [authStatus]);
 
   useEffect(() => {
     if (authStatus === "unauthenticated") router.push("/login");
@@ -55,7 +64,10 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/reports/${id}`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const res = await fetch(`/api/reports/${id}`, { signal: controller.signal });
+        clearTimeout(timeoutId);
         const json = await res.json();
         setReport(json);
       } catch {
@@ -91,6 +103,10 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
     } catch {
       toast.error("Failed to delete expense");
     }
+  }
+
+  if (sessionTimedOut) {
+    return <div className="animate-pulse text-muted-foreground">Session timed out. Please try refreshing the page.</div>;
   }
 
   if (loading) return <div className="animate-pulse text-muted-foreground">Loading report...</div>;

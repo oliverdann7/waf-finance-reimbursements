@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useState, startTransition } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -71,6 +71,15 @@ export default function ChurchReportDetailPage({ params }: { params: Promise<{ i
   const { lang } = useLanguage();
   const [report, setReport] = useState<ReportFull | null>(null);
   const [loading, setLoading] = useState(true);
+  const [sessionTimedOut, setSessionTimedOut] = useState(false);
+
+  useEffect(() => {
+    if (authStatus === "loading") {
+      const timer = setTimeout(() => setSessionTimedOut(true), 10000);
+      return () => clearTimeout(timer);
+    }
+    startTransition(() => setSessionTimedOut(false));
+  }, [authStatus]);
 
   useEffect(() => {
     if (authStatus === "unauthenticated") router.push("/login");
@@ -79,7 +88,10 @@ export default function ChurchReportDetailPage({ params }: { params: Promise<{ i
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/church-reports/${id}`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const res = await fetch(`/api/church-reports/${id}`, { signal: controller.signal });
+        clearTimeout(timeoutId);
         if (!res.ok) throw new Error();
         const json = await res.json();
         setReport(json);
@@ -91,6 +103,10 @@ export default function ChurchReportDetailPage({ params }: { params: Promise<{ i
     }
     if (authStatus === "authenticated") load();
   }, [id, authStatus, lang]);
+
+  if (sessionTimedOut) {
+    return <div className="animate-pulse text-muted-foreground">{t(lang, "common.sessionTimeout") || "Session timed out. Please try refreshing."}</div>;
+  }
 
   if (loading) return <div className="animate-pulse text-muted-foreground">{t(lang, "common.loading")}</div>;
   if (!report) return <div>{t(lang, "common.notFound")}</div>;

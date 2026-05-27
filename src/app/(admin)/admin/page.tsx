@@ -31,7 +31,10 @@ export default function AdminPage() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/admin/stats");
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const res = await fetch("/api/admin/stats", { signal: controller.signal });
+        clearTimeout(timeoutId);
         const json = await res.json();
         setStats(json);
       } catch {

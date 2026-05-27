@@ -36,10 +36,18 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function load() {
-      const res = await fetch("/api/profile");
-      const json = await res.json();
-      setProfile(json);
-      setLoading(false);
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const res = await fetch("/api/profile", { signal: controller.signal });
+        clearTimeout(timeoutId);
+        const json = await res.json();
+        setProfile(json);
+      } catch {
+        toast.error("Failed to load profile");
+      } finally {
+        setLoading(false);
+      }
     }
     if (status === "authenticated") load();
   }, [status]);
