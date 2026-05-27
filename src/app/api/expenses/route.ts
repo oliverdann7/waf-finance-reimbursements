@@ -88,7 +88,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ ...expense, reportId, warnings }, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to create expense" }, { status: 500 });
   }
 }

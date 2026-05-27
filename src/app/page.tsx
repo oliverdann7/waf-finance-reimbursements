@@ -5,7 +5,7 @@ import { useEffect, useState, startTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, FileText, Shield, CreditCard, Receipt, AlertTriangle } from "lucide-react";
+import { ArrowRight, FileText, Shield, Receipt, AlertTriangle } from "lucide-react";
 
 export default function Home() {
   const { data: session, status } = useSession();

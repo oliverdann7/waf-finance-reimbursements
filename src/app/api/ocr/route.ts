@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const result = await processReceipt(buffer, file.type);
 
     return NextResponse.json(result);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "OCR processing failed" }, { status: 500 });
   }
 }
