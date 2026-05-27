@@ -18,6 +18,10 @@ export default function NewReportPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
+  if (status === "loading") {
+    return <div className="animate-pulse text-muted-foreground">Loading...</div>;
+  }
+
   if (status === "unauthenticated") {
     router.push("/login");
     return null;

@@ -46,7 +46,10 @@ export default function AdminChurchesPage() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/churches");
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const res = await fetch("/api/churches", { signal: controller.signal });
+        clearTimeout(timeoutId);
         const json = await res.json();
         setChurches(json);
       } catch {

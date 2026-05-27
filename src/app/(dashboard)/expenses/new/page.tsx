@@ -27,6 +27,10 @@ function NewExpenseForm() {
   const [exchangeRate, setExchangeRate] = useState("1");
   const [category, setCategory] = useState("");
 
+  if (status === "loading") {
+    return <div className="animate-pulse text-muted-foreground">Loading...</div>;
+  }
+
   if (status === "unauthenticated") {
     router.push("/login");
     return null;

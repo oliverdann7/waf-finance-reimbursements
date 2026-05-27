@@ -45,13 +45,21 @@ export default function ChurchReportsPage() {
 
   useEffect(() => {
     async function load() {
-      const params = new URLSearchParams();
-      if (statusFilter !== "all") params.set("status", statusFilter);
-      if (search) params.set("search", search);
-      const res = await fetch(`/api/church-reports?${params}`);
-      const json = await res.json();
-      setReports(json);
-      setLoading(false);
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const params = new URLSearchParams();
+        if (statusFilter !== "all") params.set("status", statusFilter);
+        if (search) params.set("search", search);
+        const res = await fetch(`/api/church-reports?${params}`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        const json = await res.json();
+        setReports(json);
+      } catch {
+        // fetch failed or timed out
+      } finally {
+        setLoading(false);
+      }
     }
     if (status === "authenticated") load();
   }, [status, statusFilter, search]);
