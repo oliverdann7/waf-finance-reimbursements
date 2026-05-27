@@ -364,6 +364,7 @@
       "phone": "Phone",
       "email": "Email",
       "isActive": "Active",
+      "created": "Church created!",
       "saved": "Church saved!",
       "saveFailed": "Failed to save church",
       "deleteConfirm": "Are you sure you want to delete this church?",
