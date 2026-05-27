@@ -364,6 +364,7 @@
       "phone": "Telefon",
       "email": "E-posta",
       "isActive": "Aktif",
+      "created": "Kilise oluşturuldu!",
       "saved": "Kilise kaydedildi!",
       "saveFailed": "Kilise kaydedilemedi",
       "deleteConfirm": "Bu kiliseyi silmek istediğinize emin misiniz?",
