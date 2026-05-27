@@ -78,6 +78,19 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
     if (authStatus === "authenticated") load();
   }, [id, authStatus]);
 
+  async function loadReport() {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const res = await fetch(`/api/reports/${id}`, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      const json = await res.json();
+      setReport(json);
+    } catch {
+      toast.error("Failed to load report");
+    }
+  }
+
   async function handleSubmit() {
     try {
       const res = await fetch(`/api/reports/${id}`, {
@@ -87,7 +100,7 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
       });
       if (!res.ok) throw new Error();
       toast.success("Report submitted for review!");
-      router.refresh();
+      await loadReport();
     } catch {
       toast.error("Failed to submit report");
     }
@@ -98,7 +111,7 @@ export default function ReportDetailPage({ params }: { params: Promise<{ id: str
       const res = await fetch(`/api/expenses?id=${expenseId}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
       toast.success("Expense deleted");
-      router.refresh();
+      await loadReport();
     } catch {
       toast.error("Failed to delete expense");
     }

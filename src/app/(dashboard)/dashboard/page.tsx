@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { PlusCircle, FileText, AlertCircle, CheckCircle2, Clock, DollarSign, TrendingUp, AlertTriangle, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 
 interface DashboardData {
   currentReport: {
@@ -216,28 +217,38 @@ export default function DashboardPage() {
         </Card>
       )}
 
-      {data?.monthlyTotals && data.monthlyTotals.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
-              Monthly Totals
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-3">
-              {data.monthlyTotals.slice(-6).map((mt) => (
-                <div key={`${mt.month}-${mt.year}`} className="border rounded-lg p-4">
-                  <p className="text-sm text-muted-foreground">
-                    {new Date(mt.year, mt.month - 1).toLocaleString("default", { month: "short" })} {mt.year}
-                  </p>
-                  <p className="text-lg font-semibold mt-1">{mt.total.toFixed(2)} TRY</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {data?.monthlyTotals && data.monthlyTotals.length > 0 && (() => {
+        const chartData = data.monthlyTotals.slice(-6).map((mt) => ({
+          name: new Date(mt.year, mt.month - 1).toLocaleString("default", { month: "short" }),
+          total: Math.round(mt.total * 100) / 100,
+        }));
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                Monthly Spending
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                    <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v: number) => `${v}`} />
+                    <Tooltip
+                      formatter={(value) => [`${Number(value).toFixed(2)} TRY`, "Total"]}
+                      contentStyle={{ borderRadius: "8px", fontSize: "14px" }}
+                    />
+                    <Bar dataKey="total" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })()}
     </div>
   );
 }

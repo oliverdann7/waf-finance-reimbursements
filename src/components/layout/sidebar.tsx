@@ -16,6 +16,7 @@ import {
   BarChart3,
   Sliders,
   Camera,
+  Users,
 } from "lucide-react";
 
 const workerLinks = [
@@ -37,6 +38,7 @@ const churchLinks = [
 const adminLinks = [
   { href: "/admin", label: "Admin Dashboard", icon: Shield },
   { href: "/admin/reports", label: "All Reports", icon: FileText },
+  { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/rules", label: "Reimbursement Rules", icon: Settings },
   { href: "/admin/churches", label: "Churches", icon: Building2 },
   { href: "/admin/church-reports", label: "Church Reports", icon: BarChart3 },

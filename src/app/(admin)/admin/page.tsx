@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { REPORT_STATUSES, MONTHS } from "@/types";
 import { toast } from "sonner";
-import { FileText, Users, DollarSign, AlertTriangle, Clock } from "lucide-react";
+import { FileText, Users, DollarSign, AlertTriangle, Clock, UserCog } from "lucide-react";
 import Link from "next/link";
 
 interface AdminStats {
@@ -101,6 +101,12 @@ export default function AdminPage() {
                 </Link>
               </Button>
             )}
+            <Button className="w-full justify-start" variant="outline" asChild>
+              <Link href="/admin/users">
+                <UserCog className="mr-2 h-4 w-4" />
+                Manage Users
+              </Link>
+            </Button>
             <Button className="w-full justify-start" variant="outline" asChild>
               <Link href="/admin/rules">
                 <AlertTriangle className="mr-2 h-4 w-4" />
