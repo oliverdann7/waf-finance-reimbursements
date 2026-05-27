@@ -20,5 +20,7 @@ jobs:
       run: npm ci
     - name: Run Typecheck
       run: npm run typecheck
+    - name: Run Lint
+      run: npm run lint -- --max-warnings 16
     - name: Run Tests
-      run: npm test
+      run: npm test -- --run
